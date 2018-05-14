@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\InvoiceService.Core\InvoiceService.Core.csproj" />
+    <ProjectReference Include="..\InvoiceService.Core\InvoiceService.Core.csproj" />
     <ProjectReference Include="..\InvoiceService.Infrastructure\InvoiceService.Infrastructure.csproj" />
   </ItemGroup>
 
