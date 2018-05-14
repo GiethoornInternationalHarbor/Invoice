@@ -14,4 +14,12 @@
     <PackageReference Include="Utf8Json" Version="1.3.7" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\InvoiceService.Core\InvoiceService.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Messaging\" />
+  </ItemGroup>
+
 </Project>

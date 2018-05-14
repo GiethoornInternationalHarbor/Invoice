@@ -103,7 +103,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedRental = JsonSerializer.Deserialize<Rental>(message);
 
-			await _shipRepository.UpdateShip(receivedRental);
+			await _invoiceRepository.UpdateInvoiceAsync(receivedRental);
 
 			return true;
 		}
@@ -112,7 +112,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedRental = JsonSerializer.Deserialize<Rental>(message);
 
-			await _shipRepository.UpdateShip(receivedRental);
+			await _invoiceRepository.UpdateInvoiceAsync(receivedRental);
 
 			return true;
 		}
@@ -175,7 +175,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedShip = JsonSerializer.Deserialize<Ship>(message);
 
-			var invoice = await _invoiceRepository.GetInvoiceAsync(receivedShip.Id);
+			var invoice = await _invoiceRepository.GetInvoice(receivedShip.Id);
 
 			await _messagePublisher.PublishMessageAsync(MessageTypes.InvoiceCreated, invoice);
 
