@@ -12,13 +12,19 @@ namespace InvoiceService.App.Messaging
 		private readonly IInvoiceRepository _invoiceRepository;
 		private readonly ICustomerRepository _customerRepository;
 		private readonly IShipRepository _shipRepository;
+		private readonly IShipServiceRepository _shipServiceRepository;
 		private readonly IMessagePublisher _messagePublisher;
 
-		public InvoiceMessageHandler(IInvoiceRepository invoiceRepository, ICustomerRepository customerRepository, IShipRepository shipRepository, IMessagePublisher messagePublisher)
+		public InvoiceMessageHandler(IInvoiceRepository invoiceRepository,
+									 ICustomerRepository customerRepository,
+									 IShipRepository shipRepository,
+									 IShipServiceRepository shipServiceRepository,
+									 IMessagePublisher messagePublisher)
 		{
 			_invoiceRepository = invoiceRepository;
 			_customerRepository = customerRepository;
 			_shipRepository = shipRepository;
+			_shipServiceRepository = shipServiceRepository;
 			_messagePublisher = messagePublisher;
 		}
 
@@ -95,44 +101,63 @@ namespace InvoiceService.App.Messaging
 
 		private async Task<bool> HandleRentalAccepted(string message)
 		{
+			var receivedRental = JsonSerializer.Deserialize<Rental>(message);
+
+			await _shipRepository.UpdateShip(receivedRental);
 
 			return true;
 		}
 
 		private async Task<bool> HandleRentalRequested(string message)
 		{
+			var receivedRental = JsonSerializer.Deserialize<Rental>(message);
+
+			await _shipRepository.UpdateShip(receivedRental);
 
 			return true;
 		}
 
 		private async Task<bool> HandleServiceCompleted(string message)
 		{
+			var receivedShip = JsonSerializer.Deserialize<Ship>(message);
 
+			await _shipRepository.UpdateShip(receivedShip);
 
 			return true;
 		}
 
 		private async Task<bool> HandleServiceCreated(string message)
 		{
+			var receivedShipService = JsonSerializer.Deserialize<ShipService>(message);
 
+			await _shipServiceRepository.CreateShipService(receivedShipService);
 
 			return true;
 		}
 
 		private async Task<bool> HandleServiceDeleted(string message)
 		{
+			var shipServiceId = Guid.Parse(message);
+
+			await _shipServiceRepository.DeleteShipService(shipServiceId);
 
 			return true;
 		}
 
 		private async Task<bool> HandleServiceRequested(string message)
 		{
+			var receivedShip = JsonSerializer.Deserialize<Ship>(message);
+
+			await _shipRepository.UpdateShip(receivedShip);
 
 			return true;
 		}
 
 		private async Task<bool> HandleServiceUpdated(string message)
 		{
+			var receivedShipService = JsonSerializer.Deserialize<ShipService>(message);
+
+			await _shipServiceRepository.UpdateShipService(receivedShipService);
 
 			return true;
 		}
@@ -147,8 +172,8 @@ namespace InvoiceService.App.Messaging
 		}
 
 		private async Task<bool> HandleShipUndocked(string message)
-		{									  
-			var receivedShip = JsonSerializer.Deserialize<Ship>(message);	
+		{
+			var receivedShip = JsonSerializer.Deserialize<Ship>(message);
 
 			var invoice = await _invoiceRepository.GetInvoiceAsync(receivedShip.Id);
 
