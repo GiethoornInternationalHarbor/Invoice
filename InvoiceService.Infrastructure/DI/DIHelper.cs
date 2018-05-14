@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using InvoiceService.Core.Repositories;
 using InvoiceService.Infrastructure.Repositories;
 using InvoiceService.Core.Messaging;
+using InvoiceService.Infrastructure.Messaging;
 
 namespace InvoiceService.Infrastructure.DI
 {

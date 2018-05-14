@@ -18,8 +18,4 @@
     <ProjectReference Include="..\..\InvoiceService.Core\InvoiceService.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Messaging\" />
-  </ItemGroup>
-
 </Project>
