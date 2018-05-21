@@ -38,7 +38,6 @@ namespace InvoiceService.Infrastructure.Repositories
 		{
 			var invoiceLine = new InvoiceLine()
 			{
-				Id = Guid.NewGuid(),
 				InvoiceType = InvoiceTypes.ShipService,
 				Price = shipService.Price
 			};
@@ -50,7 +49,6 @@ namespace InvoiceService.Infrastructure.Repositories
 		{
 			var invoiceLine = new InvoiceLine()
 			{
-				Id = Guid.NewGuid(),
 				InvoiceType = InvoiceTypes.Rental,
 				Price = rental.Price
 			};

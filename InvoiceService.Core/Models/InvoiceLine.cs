@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace InvoiceService.Core.Models
 {
@@ -7,7 +8,7 @@ namespace InvoiceService.Core.Models
 	{
 		/// <summary>
 		/// Gets or sets the identifier.
-		/// </summary>
+		/// </summary>											
 		[Required]
 		[Key]
 		public Guid Id { get; set; }
