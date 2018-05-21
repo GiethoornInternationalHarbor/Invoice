@@ -36,14 +36,5 @@ namespace InvoiceService.Infrastructure.Repositories
 		{
 			return _invoiceDbContext.Ships.LastOrDefaultAsync(x => x.Id == id);
 		}
-
-		public async Task<Ship> UpdateShip(Ship ship)
-		{
-			ship.ShipServices.ForEach(x => _invoiceDbContext.ShipServices.Update(x));
-			var updatedShip = _invoiceDbContext.Ships.Update(ship);
-			await _invoiceDbContext.SaveChangesAsync();
-			await _invoiceRepository.UpdateInvoiceAsync(updatedShip.Entity);
-			return updatedShip.Entity;
-		}
 	}
 }

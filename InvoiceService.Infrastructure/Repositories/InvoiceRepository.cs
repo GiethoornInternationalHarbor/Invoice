@@ -58,7 +58,7 @@ namespace InvoiceService.Infrastructure.Repositories
 			return await CreateInvoiceLineAsync(rental.Email, invoiceLine);
 		}
 
-		private async Task<Invoice> GetInvoice(string email)
+		public async Task<Invoice> GetInvoice(string email)
 		{
 			return await _invoiceDbContext.Invoices.LastOrDefaultAsync(x => x.Customer.Email == email);
 		}

@@ -21,13 +21,6 @@ namespace InvoiceService.Core.Repositories
 		Task<Ship> GetShip(Guid id);
 
 		/// <summary>
-		/// Updates the ship.
-		/// </summary>
-		/// <param name="ship">The ship.</param>
-		/// <returns></returns>
-		Task<Ship> UpdateShip(Ship ship);
-
-		/// <summary>
 		/// Deletes the ship.
 		/// </summary>
 		/// <param name="id">The identifier.</param>
