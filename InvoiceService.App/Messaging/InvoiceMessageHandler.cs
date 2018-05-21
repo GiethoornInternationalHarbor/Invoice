@@ -119,9 +119,9 @@ namespace InvoiceService.App.Messaging
 
 		private async Task<bool> HandleServiceCompleted(string message)
 		{
-			var receivedShip = JsonSerializer.Deserialize<Ship>(message);
+			var receivedShipService = JsonSerializer.Deserialize<ShipService>(message);
 
-			await _shipRepository.UpdateShip(receivedShip);
+			await _shipServiceRepository.UpdateShipService(receivedShipService);
 
 			return true;
 		}
@@ -146,9 +146,9 @@ namespace InvoiceService.App.Messaging
 
 		private async Task<bool> HandleServiceRequested(string message)
 		{
-			var receivedShip = JsonSerializer.Deserialize<Ship>(message);
+			var receivedShipService = JsonSerializer.Deserialize<ShipService>(message);
 
-			await _shipRepository.UpdateShip(receivedShip);
+			await _shipServiceRepository.UpdateShipService(receivedShipService);
 
 			return true;
 		}
