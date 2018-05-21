@@ -16,50 +16,46 @@ namespace InvoiceService.Infrastructure.Repositories
 			_invoiceDbContext = invoiceDbContext;
 		}
 
-		public async Task<Invoice> CreateInvoiceAsync(Invoice invoice)
+		private async Task<Invoice> CreateInvoiceAsync(Invoice invoice)
 		{
 			var invoiceToAdd = (await _invoiceDbContext.Invoices.AddAsync(invoice)).Entity;
 			await _invoiceDbContext.SaveChangesAsync();
 			return invoiceToAdd;
 		}
 
-		public async Task<InvoiceLine> CreateInvoiceLineAsync(Guid id, InvoiceLine invoiceLine)
+		private async Task<Invoice> CreateInvoiceLineAsync(string email, InvoiceLine invoiceLine)
 		{
-			var invoice = await GetInvoice(id);
+			var invoice = await GetInvoice(email);
+
 			invoice.Lines.Add(invoiceLine);
-			return invoiceLine;
-		}
 
-		public Task<Invoice> GetInvoice(Guid id)
-		{
-			return _invoiceDbContext.Invoices.LastOrDefaultAsync(x => x.Id == id);
-		}
-
-		public async Task<Invoice> UpdateInvoiceAsync(Ship ship)
-		{
-			var invoice = await GetInvoice(ship.Email);
-
-			if (ship.ShipServices != null && ship.ShipServices.Count > 0)
-			{
-				ship.ShipServices.ForEach(x =>
-				{
-					invoice.Price = invoice.Price += x.Price;
-				});
-			}
+			_invoiceDbContext.Invoices.Update(invoice);
 
 			return invoice;
+		}
+
+		public async Task<Invoice> UpdateInvoiceAsync(Ship ship, ShipService shipService)
+		{
+			var invoiceLine = new InvoiceLine()
+			{
+				Id = Guid.NewGuid(),
+				InvoiceType = InvoiceTypes.ShipService,
+				Price = shipService.Price
+			};
+
+			return await CreateInvoiceLineAsync(ship.Email, invoiceLine);
 		}
 
 		public async Task<Invoice> UpdateInvoiceAsync(Rental rental)
 		{
-			var invoice = await GetInvoice(rental.Email);
-
-			if (rental.Accepted)
+			var invoiceLine = new InvoiceLine()
 			{
-				invoice.Price = invoice.Price += rental.Price;
-			}
+				Id = Guid.NewGuid(),
+				InvoiceType = InvoiceTypes.Rental,
+				Price = rental.Price
+			};
 
-			return invoice;
+			return await CreateInvoiceLineAsync(rental.Email, invoiceLine);
 		}
 
 		private async Task<Invoice> GetInvoice(string email)

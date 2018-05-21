@@ -11,7 +11,14 @@ namespace InvoiceService.Core.Repositories
 		/// </summary>
 		/// <param name="ship">The ship.</param>
 		/// <returns></returns>
-		Task<Ship> CreateShip(Ship ship); 
+		Task<Ship> CreateShip(Ship ship);
+
+		/// <summary>
+		/// Gets the ship.
+		/// </summary>
+		/// <param name="id">The identifier.</param>
+		/// <returns></returns>
+		Task<Ship> GetShip(Guid id);
 
 		/// <summary>
 		/// Updates the ship.

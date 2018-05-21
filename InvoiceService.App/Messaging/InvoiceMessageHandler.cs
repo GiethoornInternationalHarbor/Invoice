@@ -44,10 +44,6 @@ namespace InvoiceService.App.Messaging
 					{
 						return await HandleRentalAccepted(message);
 					}
-				case MessageTypes.RentalRequested:
-					{
-						return await HandleRentalRequested(message);
-					}
 				case MessageTypes.ServiceCompleted:
 					{
 						return await HandleServiceCompleted(message);
@@ -59,10 +55,6 @@ namespace InvoiceService.App.Messaging
 				case MessageTypes.ServiceDeleted:
 					{
 						return await HandleServiceDeleted(message);
-					}
-				case MessageTypes.ServiceRequested:
-					{
-						return await HandleServiceRequested(message);
 					}
 				case MessageTypes.ServiceUpdated:
 					{
@@ -108,20 +100,14 @@ namespace InvoiceService.App.Messaging
 			return true;
 		}
 
-		private async Task<bool> HandleRentalRequested(string message)
-		{
-			var receivedRental = JsonSerializer.Deserialize<Rental>(message);
-
-			await _invoiceRepository.UpdateInvoiceAsync(receivedRental);
-
-			return true;
-		}
-
 		private async Task<bool> HandleServiceCompleted(string message)
 		{
-			var receivedShipService = JsonSerializer.Deserialize<ShipService>(message);
+			var receivedShipServiceObject = JsonSerializer.Deserialize<ShipServiceObject>(message);
 
-			await _shipServiceRepository.UpdateShipService(receivedShipService);
+			var ship = await _shipRepository.GetShip(receivedShipServiceObject.ShipId);
+			var shipService = await _shipServiceRepository.GetShipService(receivedShipServiceObject.ServiceId);
+
+			await _invoiceRepository.UpdateInvoiceAsync(ship, shipService);
 
 			return true;
 		}
@@ -140,15 +126,6 @@ namespace InvoiceService.App.Messaging
 			var shipServiceId = Guid.Parse(message);
 
 			await _shipServiceRepository.DeleteShipService(shipServiceId);
-
-			return true;
-		}
-
-		private async Task<bool> HandleServiceRequested(string message)
-		{
-			var receivedShipService = JsonSerializer.Deserialize<ShipService>(message);
-
-			await _shipServiceRepository.UpdateShipService(receivedShipService);
 
 			return true;
 		}
@@ -175,7 +152,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedShip = JsonSerializer.Deserialize<Ship>(message);
 
-			var invoice = await _invoiceRepository.GetInvoice(receivedShip.Id);
+			var invoice = await _invoiceRepository.GetInvoice(receivedShip.Email);
 
 			await _messagePublisher.PublishMessageAsync(MessageTypes.InvoiceCreated, invoice);
 
