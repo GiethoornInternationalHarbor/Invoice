@@ -10,10 +10,12 @@ namespace InvoiceService.Infrastructure.Repositories
 	public class InvoiceRepository : IInvoiceRepository
 	{
 		private readonly InvoiceDbContext _invoiceDbContext;
+		private readonly IRentalRepository _rentalRepository;
 
-		public InvoiceRepository(InvoiceDbContext invoiceDbContext)
+		public InvoiceRepository(InvoiceDbContext invoiceDbContext, IRentalRepository rentalRepository)
 		{
 			_invoiceDbContext = invoiceDbContext;
+			_rentalRepository = rentalRepository;
 		}
 
 		private async Task<Invoice> CreateInvoiceAsync(Invoice invoice)
@@ -23,9 +25,9 @@ namespace InvoiceService.Infrastructure.Repositories
 			return invoiceToAdd;
 		}
 
-		private async Task<Invoice> CreateInvoiceLineAsync(string email, InvoiceLine invoiceLine)
+		private async Task<Invoice> CreateInvoiceLineAsync(string customerId, InvoiceLine invoiceLine)
 		{
-			var invoice = await GetInvoice(email);
+			var invoice = await GetInvoice(customerId);
 
 			invoice.Lines.Add(invoiceLine);
 
@@ -34,7 +36,7 @@ namespace InvoiceService.Infrastructure.Repositories
 			return invoice;
 		}
 
-		public async Task<Invoice> UpdateInvoiceAsync(Ship ship, ShipService shipService)
+		public async Task<Invoice> UpdateInvoiceAsync(Customer customer, Ship ship, ShipService shipService)
 		{
 			var invoiceLine = new InvoiceLine()
 			{
@@ -42,10 +44,10 @@ namespace InvoiceService.Infrastructure.Repositories
 				Price = shipService.Price
 			};
 
-			return await CreateInvoiceLineAsync(ship.Email, invoiceLine);
+			return await CreateInvoiceLineAsync(customer.Email, invoiceLine);
 		}
 
-		public async Task<Invoice> UpdateInvoiceAsync(Rental rental)
+		public async Task<Invoice> UpdateInvoiceAsync(Customer customer, Rental rental)
 		{
 			var invoiceLine = new InvoiceLine()
 			{
@@ -53,7 +55,11 @@ namespace InvoiceService.Infrastructure.Repositories
 				Price = rental.Price
 			};
 
-			return await CreateInvoiceLineAsync(rental.Email, invoiceLine);
+			var invoice = await CreateInvoiceLineAsync(customer.Email, invoiceLine);
+
+			await _rentalRepository.DeleteRental(rental.Id);
+
+			return invoice;
 		}
 
 		public async Task<Invoice> GetInvoice(string email)
