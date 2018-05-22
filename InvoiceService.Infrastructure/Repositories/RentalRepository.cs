@@ -9,30 +9,33 @@ namespace InvoiceService.Infrastructure.Repositories
 {
 	public class RentalRepository : IRentalRepository
 	{
-		private readonly InvoiceDbContext _invoiceDbContext;
+		private readonly InvoiceDbContextFactory _invoiceDbFactory;
 
-		public RentalRepository(InvoiceDbContext invoiceDbContext)
+		public RentalRepository(InvoiceDbContextFactory invoiceDbContextFactory)
 		{
-			_invoiceDbContext = invoiceDbContext;
+			_invoiceDbFactory = invoiceDbContextFactory;
 		}
 
 		public async Task<Rental> CreateRental(Rental rental)
 		{
-			var rentalToAdd = (await _invoiceDbContext.Rentals.AddAsync(rental)).Entity;
-			await _invoiceDbContext.SaveChangesAsync();
+			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
+			var rentalToAdd = (await dbContext.Rentals.AddAsync(rental)).Entity;
+			await dbContext.SaveChangesAsync();
 			return rentalToAdd;
 		}
 
 		public async Task DeleteRental(Guid id)
 		{
+			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
 			var rentalToDelete = new Rental() { Id = id };
-			_invoiceDbContext.Entry(rentalToDelete).State = EntityState.Deleted;
-			await _invoiceDbContext.SaveChangesAsync();
+			dbContext.Entry(rentalToDelete).State = EntityState.Deleted;
+			await dbContext.SaveChangesAsync();
 		}
 
 		public async Task<Rental> GetRental(Guid id)
 		{
-			return await _invoiceDbContext.Rentals.LastOrDefaultAsync(x => x.Id == id);
+			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
+			return await dbContext.Rentals.LastOrDefaultAsync(x => x.Id == id);
 		}
 	}
 }

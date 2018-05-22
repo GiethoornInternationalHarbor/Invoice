@@ -1,18 +1,32 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-#if DEBUG
 namespace InvoiceService.Infrastructure.Database
 {
-	public class InvoiceDbContextFactory : IDesignTimeDbContextFactory<InvoiceDbContext>
+	public class InvoiceDbContextFactory
 	{
-		public InvoiceDbContext CreateDbContext(string[] args)
+		/// <summary>
+		/// Gets or sets the connection string.
+		/// </summary>
+		protected string ConnectionString { get; set; }
+
+		public InvoiceDbContextFactory(string connectionString)
+		{
+
+		}
+
+		/// <summary>
+		/// Creates the database context.
+		/// </summary>
+		/// <returns></returns>
+		public InvoiceDbContext CreateDbContext()
 		{
 			var optBuilder = new DbContextOptionsBuilder<InvoiceDbContext>();
-			optBuilder.UseSqlServer("Server=.\\SQL_2017;Database=InvoiceService;Trusted_Connection=True;MultipleActiveResultSets=true");
+			optBuilder.UseSqlServer(ConnectionString);
 
 			return new InvoiceDbContext(optBuilder.Options);
 		}
 	}
 }
-#endif
