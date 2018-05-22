@@ -13,13 +13,13 @@ namespace InvoiceService.Core.Repositories
 		Task<Invoice> GetInvoice(string email);
 
 		/// <summary>
-		/// Updates the invoice asynchronous.
+		/// Adds the ship service line asynchronous.
 		/// </summary>
 		/// <param name="customer">The customer.</param>
 		/// <param name="ship">The ship.</param>
 		/// <param name="shipService">The ship service.</param>
 		/// <returns></returns>
-		Task<Invoice> UpdateInvoiceAsync(Customer customer, Ship ship, ShipService shipService);
+		Task<Invoice> AddShipServiceLineAsync(Customer customer, Ship ship, ShipService shipService);
 
 		/// <summary>
 		/// Updates the invoice asynchronous.

@@ -127,7 +127,7 @@ namespace InvoiceService.App.Messaging
 			var shipService = await _shipServiceRepository.GetShipService(receivedShipServiceObject.ServiceId);
 			var customer = await _customerRepository.GetCustomerAsync(receivedShipServiceObject.CustomerId);
 
-			await _invoiceRepository.UpdateInvoiceAsync(customer, ship, shipService);
+			await _invoiceRepository.AddShipServiceLineAsync(customer, ship, shipService);
 
 			return true;
 		}

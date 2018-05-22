@@ -36,10 +36,11 @@ namespace InvoiceService.Infrastructure.Repositories
 			return invoice;
 		}
 
-		public async Task<Invoice> UpdateInvoiceAsync(Customer customer, Ship ship, ShipService shipService)
+		public async Task<Invoice> AddShipServiceLineAsync(Customer customer, Ship ship, ShipService shipService)
 		{
 			var invoiceLine = new InvoiceLine()
 			{
+				Description = $"Service: {shipService.Name} applied for ship: {ship.Name}",
 				InvoiceType = InvoiceTypes.ShipService,
 				Price = shipService.Price
 			};
