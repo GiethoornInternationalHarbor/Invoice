@@ -12,9 +12,10 @@ using System;
 namespace InvoiceService.Infrastructure.Migrations
 {
     [DbContext(typeof(InvoiceDbContext))]
-    partial class InvoiceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180521210815_Added_Rental")]
+    partial class Added_Rental
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,8 +68,6 @@ namespace InvoiceService.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("NEWID()");
 
-                    b.Property<string>("Description");
-
                     b.Property<Guid?>("InvoiceId");
 
                     b.Property<int>("InvoiceType");
@@ -99,8 +98,6 @@ namespace InvoiceService.Infrastructure.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
-
                     b.HasKey("Id");
 
                     b.ToTable("Ships");
@@ -110,8 +107,6 @@ namespace InvoiceService.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
 
                     b.Property<double>("Price");
 

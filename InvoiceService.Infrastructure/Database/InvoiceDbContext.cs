@@ -17,6 +17,16 @@ namespace InvoiceService.Infrastructure.Database
 
 		public DbSet<Ship> Ships { get; set; }
 
+		public DbSet<Rental> Rentals { get; set; }
+
 		public DbSet<ShipService> ShipServices { get; set; }
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			modelBuilder.Entity<InvoiceLine>()
+				.Property(x => x.Id)
+				.ValueGeneratedOnAdd()
+				.HasDefaultValueSql("NEWID()");
+		}
 	}
 }

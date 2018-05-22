@@ -14,6 +14,13 @@ namespace InvoiceService.Core.Repositories
 		Task<ShipService> CreateShipService(ShipService shipService);
 
 		/// <summary>
+		/// Gets the ship service.
+		/// </summary>
+		/// <param name="id">The identifier.</param>
+		/// <returns></returns>
+		Task<ShipService> GetShipService(Guid id);
+
+		/// <summary>
 		/// Updates the ship service.
 		/// </summary>
 		/// <param name="shipService">The ship service.</param>
@@ -25,6 +32,6 @@ namespace InvoiceService.Core.Repositories
 		/// </summary>
 		/// <param name="id">The identifier.</param>
 		/// <returns></returns>
-		Task DeleteShipService(Guid id);  
+		Task DeleteShipService(Guid id);
 	}
 }

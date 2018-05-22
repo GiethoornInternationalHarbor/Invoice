@@ -23,7 +23,7 @@ namespace InvoiceService.Infrastructure.Messaging
 			return Task.Run(() =>
 				Policy
 					.Handle<Exception>()
-					.WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) => { Console.WriteLine("Error connecting to RabbitMQ. Retrying in 5 sec."); })
+					.WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) => { Console.Error.WriteLine("Error connecting to RabbitMQ. Retrying in 5 sec."); })
 					.Execute(() =>
 					{
 						var factory = new ConnectionFactory() { Uri = _uri };

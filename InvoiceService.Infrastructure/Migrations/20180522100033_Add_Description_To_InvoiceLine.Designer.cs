@@ -12,9 +12,10 @@ using System;
 namespace InvoiceService.Infrastructure.Migrations
 {
     [DbContext(typeof(InvoiceDbContext))]
-    partial class InvoiceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180522100033_Add_Description_To_InvoiceLine")]
+    partial class Add_Description_To_InvoiceLine
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

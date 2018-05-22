@@ -4,27 +4,27 @@ using System.Threading.Tasks;
 
 namespace InvoiceService.Core.Repositories
 {
-	public interface IShipRepository
+	public interface IRentalRepository
 	{
 		/// <summary>
-		/// Creates the ship.
-		/// </summary>
-		/// <param name="ship">The ship.</param>
-		/// <returns></returns>
-		Task<Ship> CreateShip(Ship ship);
-
-		/// <summary>
-		/// Gets the ship.
+		/// Gets the rental.
 		/// </summary>
 		/// <param name="id">The identifier.</param>
 		/// <returns></returns>
-		Task<Ship> GetShip(Guid id);
+		Task<Rental> GetRental(Guid id);
 
 		/// <summary>
-		/// Deletes the ship.
+		/// Creates the rental.
+		/// </summary>
+		/// <param name="rental">The rental.</param>
+		/// <returns></returns>
+		Task<Rental> CreateRental(Rental rental);
+
+		/// <summary>
+		/// Deletes the rental.
 		/// </summary>
 		/// <param name="id">The identifier.</param>
 		/// <returns></returns>
-		Task DeleteShip(Guid id);
+		Task DeleteRental(Guid id);
 	}
 }

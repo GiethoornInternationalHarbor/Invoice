@@ -7,6 +7,8 @@ using InvoiceService.Core.Repositories;
 using InvoiceService.Infrastructure.Repositories;
 using InvoiceService.Core.Messaging;
 using InvoiceService.Infrastructure.Messaging;
+using Polly;
+using System.Threading.Tasks;
 
 namespace InvoiceService.Infrastructure.DI
 {
@@ -20,6 +22,7 @@ namespace InvoiceService.Infrastructure.DI
 			services.AddTransient<IInvoiceRepository, InvoiceRepository>();
 			services.AddTransient<IShipRepository, ShipRepository>();
 			services.AddTransient<IShipServiceRepository, ShipServiceRepository>();
+			services.AddTransient<IRentalRepository, RentalRepository>();
 
 			services.AddSingleton<IMessageHandler, RabbitMQMessageHandler>((provider) => new RabbitMQMessageHandler(configuration.GetSection("AMQP_URL").Value));
 			services.AddTransient<IMessagePublisher, RabbitMQMessagePublisher>((provider) => new RabbitMQMessagePublisher(configuration.GetSection("AMQP_URL").Value));
@@ -28,9 +31,18 @@ namespace InvoiceService.Infrastructure.DI
 		public static void OnServicesSetup(IServiceProvider serviceProvider)
 		{
 			Console.WriteLine("Connecting to database and migrating if required");
-			var dbContext = serviceProvider.GetService<InvoiceDbContext>();
-			dbContext.Database.Migrate();
-			Console.WriteLine("Completed connecting to database");
+			Policy
+			 .Handle<Exception>()
+			 .WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) =>
+			 {
+				 Console.Error.WriteLine("Error connecting to database. Retrying in 5 sec.");
+			 })
+			 .Execute(() =>
+			 {
+				 var dbContext = serviceProvider.GetService<InvoiceDbContext>();
+				 dbContext.Database.Migrate();
+				 Console.WriteLine("Completed connecting to database");
+			 });
 		}
 	}
 }

@@ -7,10 +7,15 @@ namespace InvoiceService.Core.Models
 	{
 		/// <summary>
 		/// Gets or sets the identifier.
-		/// </summary>
+		/// </summary>											
 		[Required]
 		[Key]
 		public Guid Id { get; set; }
+
+		/// <summary>
+		/// Gets or sets the description.
+		/// </summary>
+		public string Description { get; set; }
 
 		/// <summary>
 		/// Gets or sets the type of the invoice.

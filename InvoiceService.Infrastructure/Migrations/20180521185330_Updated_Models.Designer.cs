@@ -12,9 +12,10 @@ using System;
 namespace InvoiceService.Infrastructure.Migrations
 {
     [DbContext(typeof(InvoiceDbContext))]
-    partial class InvoiceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180521185330_Updated_Models")]
+    partial class Updated_Models
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,10 +65,7 @@ namespace InvoiceService.Infrastructure.Migrations
             modelBuilder.Entity("InvoiceService.Core.Models.InvoiceLine", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValueSql("NEWID()");
-
-                    b.Property<string>("Description");
+                        .ValueGeneratedOnAdd();
 
                     b.Property<Guid?>("InvoiceId");
 
@@ -82,24 +80,13 @@ namespace InvoiceService.Infrastructure.Migrations
                     b.ToTable("InvoiceLines");
                 });
 
-            modelBuilder.Entity("InvoiceService.Core.Models.Rental", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<double>("Price");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Rentals");
-                });
-
             modelBuilder.Entity("InvoiceService.Core.Models.Ship", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Email")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -110,8 +97,6 @@ namespace InvoiceService.Infrastructure.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
 
                     b.Property<double>("Price");
 
