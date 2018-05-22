@@ -14,7 +14,7 @@ namespace InvoiceService.Infrastructure.Database
 
 		public InvoiceDbContextFactory(string connectionString)
 		{
-
+			ConnectionString = connectionString;
 		}
 
 		/// <summary>
