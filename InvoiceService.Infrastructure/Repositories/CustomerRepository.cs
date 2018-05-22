@@ -8,29 +8,32 @@ namespace InvoiceService.Infrastructure.Repositories
 {
 	public class CustomerRepository : ICustomerRepository
 	{
-		private readonly InvoiceDbContext _invoiceDbContext;
+		private readonly InvoiceDbContextFactory _invoiceDbFactory;
 
-		public CustomerRepository(InvoiceDbContext invoiceDbContext)
+		public CustomerRepository(InvoiceDbContextFactory invoiceDbContextFactory)
 		{
-			_invoiceDbContext = invoiceDbContext;
+			_invoiceDbFactory = invoiceDbContextFactory;
 		}
 
 		public async Task<Customer> CreateCustomerAsync(Customer customer)
 		{
-			var customerToAdd = (await _invoiceDbContext.Customers.AddAsync(customer)).Entity;
-			await _invoiceDbContext.SaveChangesAsync();
+			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
+			var customerToAdd = (await dbContext.Customers.AddAsync(customer)).Entity;
+			await dbContext.SaveChangesAsync();
 			return customerToAdd;
 		}
 
 		public Task<Customer> GetCustomerAsync(string email)
 		{
-			return _invoiceDbContext.Customers.LastOrDefaultAsync(x => x.Email == email);
+			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
+			return dbContext.Customers.LastOrDefaultAsync(x => x.Email == email);
 		}
 
 		public async Task<Customer> UpdateCustomerAsync(Customer customer)
 		{
-			var updatedCustomer = _invoiceDbContext.Customers.Update(customer);
-			await _invoiceDbContext.SaveChangesAsync();
+			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
+			var updatedCustomer = dbContext.Customers.Update(customer);
+			await dbContext.SaveChangesAsync();
 			return updatedCustomer.Entity;
 		}
 	}

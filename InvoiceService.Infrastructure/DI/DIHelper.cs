@@ -16,13 +16,14 @@ namespace InvoiceService.Infrastructure.DI
 	{
 		public static void Setup(IServiceCollection services, IConfiguration configuration)
 		{
-			services.AddDbContext<InvoiceDbContext>(opt => opt.UseSqlServer(configuration.GetSection("DB_CONNECTION_STRING").Value));
+			services.AddSingleton((provider) => new InvoiceDbContextFactory(configuration.GetSection("DB_CONNECTION_STRING").Value));
 
 			services.AddTransient<ICustomerRepository, CustomerRepository>();
 			services.AddTransient<IInvoiceRepository, InvoiceRepository>();
 			services.AddTransient<IShipRepository, ShipRepository>();
 			services.AddTransient<IShipServiceRepository, ShipServiceRepository>();
 			services.AddTransient<IRentalRepository, RentalRepository>();
+
 
 			services.AddSingleton<IMessageHandler, RabbitMQMessageHandler>((provider) => new RabbitMQMessageHandler(configuration.GetSection("AMQP_URL").Value));
 			services.AddTransient<IMessagePublisher, RabbitMQMessagePublisher>((provider) => new RabbitMQMessagePublisher(configuration.GetSection("AMQP_URL").Value));
@@ -39,7 +40,8 @@ namespace InvoiceService.Infrastructure.DI
 			 })
 			 .Execute(() =>
 			 {
-				 var dbContext = serviceProvider.GetService<InvoiceDbContext>();
+				 var dbContextFactory = serviceProvider.GetService<InvoiceDbContextFactory>();
+				 InvoiceDbContext dbContext = dbContextFactory.CreateDbContext();
 				 dbContext.Database.Migrate();
 				 Console.WriteLine("Completed connecting to database");
 			 });

@@ -9,32 +9,35 @@ namespace InvoiceService.Infrastructure.Repositories
 {
 	public class ShipRepository : IShipRepository
 	{
-		private readonly InvoiceDbContext _invoiceDbContext;
 		private readonly IInvoiceRepository _invoiceRepository;
+		private readonly InvoiceDbContextFactory _invoiceDbFactory;
 
-		public ShipRepository(IInvoiceRepository invoiceRepository, InvoiceDbContext invoiceDbContext)
+		public ShipRepository(IInvoiceRepository invoiceRepository, InvoiceDbContextFactory invoiceDbContextFactory)
 		{
-			_invoiceDbContext = invoiceDbContext;
+			_invoiceDbFactory = invoiceDbContextFactory;
 			_invoiceRepository = invoiceRepository;
 		}
 
 		public async Task<Ship> CreateShip(Ship ship)
 		{
-			var shipToAdd = (await _invoiceDbContext.Ships.AddAsync(ship)).Entity;
-			await _invoiceDbContext.SaveChangesAsync();
+			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
+			var shipToAdd = (await dbContext.Ships.AddAsync(ship)).Entity;
+			await dbContext.SaveChangesAsync();
 			return shipToAdd;
 		}
 
 		public async Task DeleteShip(Guid id)
 		{
+			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
 			var shipToDelete = new Ship() { Id = id };
-			_invoiceDbContext.Entry(shipToDelete).State = EntityState.Deleted;
-			await _invoiceDbContext.SaveChangesAsync();
+			dbContext.Entry(shipToDelete).State = EntityState.Deleted;
+			await dbContext.SaveChangesAsync();
 		}
 
 		public Task<Ship> GetShip(Guid id)
 		{
-			return _invoiceDbContext.Ships.LastOrDefaultAsync(x => x.Id == id);
+			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
+			return dbContext.Ships.LastOrDefaultAsync(x => x.Id == id);
 		}
 	}
 }
