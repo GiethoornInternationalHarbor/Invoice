@@ -28,24 +28,21 @@ namespace InvoiceService.Infrastructure.DI
 			services.AddTransient<IMessagePublisher, RabbitMQMessagePublisher>((provider) => new RabbitMQMessagePublisher(configuration.GetSection("AMQP_URL").Value));
 		}
 
-		public static Task OnServicesSetup(IServiceProvider serviceProvider)
+		public static void OnServicesSetup(IServiceProvider serviceProvider)
 		{
-			return Task.Run(() =>
-			{
-				Console.WriteLine("Connecting to database and migrating if required");
-				Policy
-				 .Handle<Exception>()
-				 .WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) =>
-				 {
-					 Console.Error.WriteLine("Error connecting to database. Retrying in 5 sec.");
-				 })
-				 .Execute(() =>
-				 {
-					 var dbContext = serviceProvider.GetService<InvoiceDbContext>();
-					 dbContext.Database.Migrate();
-					 Console.WriteLine("Completed connecting to database");
-				 });
-			});
+			Console.WriteLine("Connecting to database and migrating if required");
+			Policy
+			 .Handle<Exception>()
+			 .WaitAndRetry(9, r => TimeSpan.FromSeconds(5), (ex, ts) =>
+			 {
+				 Console.Error.WriteLine("Error connecting to database. Retrying in 5 sec.");
+			 })
+			 .Execute(() =>
+			 {
+				 var dbContext = serviceProvider.GetService<InvoiceDbContext>();
+				 dbContext.Database.Migrate();
+				 Console.WriteLine("Completed connecting to database");
+			 });
 		}
 	}
 }
