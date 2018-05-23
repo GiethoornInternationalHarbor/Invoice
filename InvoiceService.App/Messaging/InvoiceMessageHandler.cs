@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using InvoiceService.Core.Events;
 using InvoiceService.Core.Messaging;
 using InvoiceService.Core.Models;
 using InvoiceService.Core.Repositories;
@@ -91,9 +92,9 @@ namespace InvoiceService.App.Messaging
 
 		private async Task<bool> HandleCustomerCreated(string message)
 		{
-			var receivedCustomer = JsonSerializer.Deserialize<Customer>(message);
+			var receivedCustomer = JsonSerializer.Deserialize<CustomerCreatedEvent>(message);
 
-			await _customerRepository.CreateCustomerAsync(receivedCustomer);
+			await _customerRepository.CreateCustomerAsync(receivedCustomer.Email, receivedCustomer.Address, receivedCustomer.PostalCode, receivedCustomer.Residence);
 
 			return true;
 		}
