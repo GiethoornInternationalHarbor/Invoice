@@ -5,6 +5,7 @@ using InvoiceService.Infrastructure.Database;
 using InvoiceService.Infrastructure.EventSourcing;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace InvoiceService.Infrastructure.Repositories
@@ -20,30 +21,7 @@ namespace InvoiceService.Infrastructure.Repositories
 			_customerRepository = customerRepository;
 		}
 
-		private async Task<Invoice> CreateInvoiceAsync(Invoice invoice)
-		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			var invoiceToAdd = (await dbContext.Invoices.AddAsync(invoice)).Entity;
-			await dbContext.SaveChangesAsync();
-			return invoiceToAdd;
-		}
-
-		private async Task<Invoice> CreateInvoiceLineAsync(string customerId, InvoiceLine invoiceLine)
-		{
-			throw new NotImplementedException();
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			/*var invoice = await GetInvoiceByEmail(customerId);
-
-			invoice.Lines.Add(invoiceLine);
-
-			dbContext.Invoices.Update(invoice);
-
-			await dbContext.SaveChangesAsync();
-
-			return invoice;*/
-		}
-
-		public async Task<Invoice> AddShipServiceLineAsync(Customer customer, Ship ship, ShipService shipService)
+		public async Task<Invoice> AddShipServiceLineAsync(string invoiceId, string shipId, string serviceId)
 		{
 			throw new NotImplementedException();
 
@@ -89,6 +67,14 @@ namespace InvoiceService.Infrastructure.Repositories
 
 			await _eventRepository.SaveAsync(invoice);
 			await _customerRepository.AddInvoice(customerId, invoice.Id.ToString());
+		}
+
+		public async Task<Invoice> GetLastInvoiceForCustomer(string customerId)
+		{
+			Customer customer = await _customerRepository.GetCustomerAsync(customerId);
+
+			Invoice invoice = await _eventRepository.GetByIdAsync(customer.Invoices.Last());
+			return invoice;
 		}
 	}
 }

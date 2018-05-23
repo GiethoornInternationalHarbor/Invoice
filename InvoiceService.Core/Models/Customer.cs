@@ -8,17 +8,17 @@ namespace InvoiceService.Core.Models
 {
 	public class Customer : AggregateBase<CustomerId>
 	{
-		private string Email { get; set; }
+		public string Email { get; protected set; }
 
-		private string Address { get; set; }
+		public string Address { get; protected set; }
 
-		private string PostalCode { get; set; }
+		public string PostalCode { get; protected set; }
 
-		private string Residence { get; set; }
+		public string Residence { get; protected set; }
 
-		private bool IsDeleted { get; set; }
+		public bool IsDeleted { get; protected set; }
 
-		private List<InvoiceId> Invoices { get; set; }
+		public List<InvoiceId> Invoices { get; protected set; }
 
 		private Customer()
 		{

@@ -20,7 +20,7 @@ namespace InvoiceService.Core.Models
 			RaiseEvent(new RentalRequestedEvent(rentalId, customerId, price));
 		}
 
-		public void AcceptRental(double price)
+		public void Accept(double price)
 		{
 			if (!IsDeclined)
 			{

@@ -20,6 +20,13 @@ namespace InvoiceService.Infrastructure.Repositories
 			_invoiceRepository = invoiceRepository;
 		}
 
+		public async Task Accept(string rentalId, double price)
+		{
+			var rental = await _eventRepository.GetByIdAsync(new RentalId(rentalId));
+			rental.Accept(price);
+			await _eventRepository.SaveAsync(rental);
+		}
+
 		public async Task CreateRental(string customerId, string rentalId, double price)
 		{
 			Rental rental = new Rental(new RentalId(rentalId), new CustomerId(customerId), price);

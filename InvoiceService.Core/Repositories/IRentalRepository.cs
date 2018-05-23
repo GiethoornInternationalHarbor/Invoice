@@ -13,6 +13,14 @@ namespace InvoiceService.Core.Repositories
 		Task<Rental> GetRental(string rentalId);
 
 		/// <summary>
+		/// Accepts the specified rental identifier.
+		/// </summary>
+		/// <param name="rentalId">The rental identifier.</param>
+		/// <param name="price">The price.</param>
+		/// <returns></returns>
+		Task Accept(string rentalId, double price);
+
+		/// <summary>
 		/// Creates the rental.
 		/// </summary>
 		/// <param name="customerId">The customer identifier.</param>

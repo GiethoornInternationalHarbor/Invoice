@@ -10,6 +10,7 @@ namespace InvoiceService.Core.Models
 	public class Invoice : AggregateBase<InvoiceId>
 	{
 		private CustomerId CustomerId { get; set; }
+		private RentalId RentalId { get; set; }
 
 		private Invoice()
 		{
@@ -47,10 +48,14 @@ namespace InvoiceService.Core.Models
 		{
 			Lines.Add(new InvoiceLine()
 			{
-				InvoiceType = InvoiceTypes.ShipService,
 				ServiceId = ev.ShipServiceId,
 				ShipId = ev.ShipId
 			});
+		}
+
+		internal void Apply(InvoiceRentalSetEvent ev)
+		{
+			RentalId = ev.RentalId;
 		}
 
 		/// <summary>
