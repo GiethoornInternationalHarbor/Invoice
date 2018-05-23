@@ -114,16 +114,16 @@ namespace InvoiceService.App.Messaging
 
 		private async Task<bool> HandleRentalRequested(string message)
 		{
-			var receivedRental = JsonSerializer.Deserialize<Rental>(message);
+			var receivedRental = JsonSerializer.Deserialize<RentalMessageEvent>(message);
 
-			await _rentalRepository.CreateRental(receivedRental.Id, receivedRental.Price);
+			await _rentalRepository.CreateRental(receivedRental.CustomerId, receivedRental.RentalId, receivedRental.Price);
 
 			return true;
 		}
 
 		private async Task<bool> HandleRentalAccepted(string message)
 		{
-			var customerRental = JsonSerializer.Deserialize<CustomerRental>(message);
+			var customerRental = JsonSerializer.Deserialize<RentalMessageEvent>(message);
 
 			var customer = await _customerRepository.GetCustomerAsync(customerRental.CustomerId);
 

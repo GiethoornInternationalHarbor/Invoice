@@ -15,10 +15,11 @@ namespace InvoiceService.Core.Repositories
 		/// <summary>
 		/// Creates the rental.
 		/// </summary>
+		/// <param name="customerId">The customer identifier.</param>
 		/// <param name="rentalId">The rental identifier.</param>
 		/// <param name="price">The price.</param>
 		/// <returns></returns>
-		Task CreateRental(string rentalId, double price);
+		Task CreateRental(string customerId, string rentalId, double price);
 
 		/// <summary>
 		/// Deletes the rental.

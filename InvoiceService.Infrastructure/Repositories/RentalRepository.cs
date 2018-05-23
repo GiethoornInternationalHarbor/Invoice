@@ -1,4 +1,5 @@
-﻿using InvoiceService.Core.Models;
+﻿using InvoiceService.Core.EventSourcing.Ids;
+using InvoiceService.Core.Models;
 using InvoiceService.Core.Repositories;
 using InvoiceService.Infrastructure.Database;
 using InvoiceService.Infrastructure.EventSourcing;
@@ -17,9 +18,9 @@ namespace InvoiceService.Infrastructure.Repositories
 			_eventRepository = eventRepository;
 		}
 
-		public async Task CreateRental(string rentalId, double price)
+		public async Task CreateRental(string customerId, string rentalId, double price)
 		{
-			Rental rental = new Rental(new RentalId(rentalId), price);
+			Rental rental = new Rental(new RentalId(rentalId), new CustomerId(customerId), price);
 			await _eventRepository.SaveAsync(rental);
 		}
 

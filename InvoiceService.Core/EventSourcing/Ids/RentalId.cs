@@ -1,6 +1,6 @@
 ﻿using InvoiceService.Core.EventSourcing;
 
-namespace InvoiceService.Core.Models
+namespace InvoiceService.Core.EventSourcing.Ids
 {
 	public class RentalId : AggregateIdBase
 	{
