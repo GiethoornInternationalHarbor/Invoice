@@ -19,13 +19,13 @@ namespace InvoiceService.Core.Repositories
 		/// </summary>
 		/// <param name="id">The identifier.</param>
 		/// <returns></returns>
-		Task<Ship> GetShip(Guid id);
+		Task<Ship> GetShip(string id);
 
 		/// <summary>
 		/// Deletes the ship.
 		/// </summary>
 		/// <param name="id">The identifier.</param>
 		/// <returns></returns>
-		Task DeleteShip(Guid id);
+		Task DeleteShip(string id);
 	}
 }

@@ -23,17 +23,14 @@ namespace InvoiceService.Infrastructure.Repositories
 			await _eventRepository.SaveAsync(ship);
 		}
 
-		public async Task DeleteShip(Guid id)
+		public async Task DeleteShip(string id)
 		{
-			throw new NotImplementedException();
-
-			/*InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			var shipToDelete = new Ship() { Id = id };
-			dbContext.Entry(shipToDelete).State = EntityState.Deleted;
-			await dbContext.SaveChangesAsync();*/
+			var ship = await _eventRepository.GetByIdAsync(new ShipId(id));
+			ship.Undocked();
+			await _eventRepository.SaveAsync(ship);
 		}
 
-		public Task<Ship> GetShip(Guid id)
+		public Task<Ship> GetShip(string id)
 		{
 			/*InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
 			return dbContext.Ships.LastOrDefaultAsync(x => x.Id == id);*/
