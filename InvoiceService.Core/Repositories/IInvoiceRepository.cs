@@ -10,7 +10,7 @@ namespace InvoiceService.Core.Repositories
 		/// </summary>
 		/// <param name="email">The email.</param>
 		/// <returns></returns>
-		Task<Invoice> GetInvoice(string email);
+		Task<Invoice> GetInvoiceByEmail(string email);
 
 		/// <summary>
 		/// Adds the ship service line asynchronous.

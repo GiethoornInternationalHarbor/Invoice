@@ -172,7 +172,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedShip = JsonSerializer.Deserialize<CustomerShip>(message);
 
-			var invoice = await _invoiceRepository.GetInvoice(receivedShip.CustomerId);
+			var invoice = await _invoiceRepository.GetInvoiceByEmail(receivedShip.CustomerId);
 
 			await _messagePublisher.PublishMessageAsync(MessageTypes.InvoiceCreated, invoice);
 

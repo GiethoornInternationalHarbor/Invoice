@@ -29,7 +29,7 @@ namespace InvoiceService.Infrastructure.Repositories
 		private async Task<Invoice> CreateInvoiceLineAsync(string customerId, InvoiceLine invoiceLine)
 		{
 			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			var invoice = await GetInvoice(customerId);
+			var invoice = await GetInvoiceByEmail(customerId);
 
 			invoice.Lines.Add(invoiceLine);
 
@@ -67,7 +67,7 @@ namespace InvoiceService.Infrastructure.Repositories
 			return invoice;
 		}
 
-		public async Task<Invoice> GetInvoice(string email)
+		public async Task<Invoice> GetInvoiceByEmail(string email)
 		{
 			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
 			return await dbContext.Invoices.LastOrDefaultAsync(x => x.Customer.Email == email);
