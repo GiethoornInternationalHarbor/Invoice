@@ -27,6 +27,6 @@ namespace InvoiceService.Core.Repositories
 		/// </summary>
 		/// <param name="customer">The customer.</param>
 		/// <returns></returns>
-		Task<Customer> UpdateCustomerAsync(Customer customer);
+		Task UpdateCustomerAsync(string customerId, string email, string address, string postalCode, string residence);
 	}
 }

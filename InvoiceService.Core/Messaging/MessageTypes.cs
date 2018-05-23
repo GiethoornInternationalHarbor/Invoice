@@ -5,7 +5,7 @@
 		Unknown,
 		InvoiceCreated,
 		CustomerCreated,
-		CustomedUpdated,
+		CustomerUpdated,
 		RentalRequested,
 		RentalAccepted,
 		ServiceCreated,

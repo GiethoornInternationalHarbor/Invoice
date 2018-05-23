@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using InvoiceService.App.Structs;
 using InvoiceService.Core.Events;
 using InvoiceService.Core.Messaging;
 using InvoiceService.Core.Models;
@@ -36,7 +37,7 @@ namespace InvoiceService.App.Messaging
 		{
 			switch (messageType)
 			{
-				case MessageTypes.CustomedUpdated:
+				case MessageTypes.CustomerUpdated:
 					{
 						return await HandleCustomerUpdated(message);
 					}
@@ -83,16 +84,16 @@ namespace InvoiceService.App.Messaging
 
 		private async Task<bool> HandleCustomerUpdated(string message)
 		{
-			var receivedCustomer = JsonSerializer.Deserialize<Customer>(message);
+			var receivedCustomer = JsonSerializer.Deserialize<CustomerUpdatedMessageEvent>(message);
 
-			await _customerRepository.UpdateCustomerAsync(receivedCustomer);
+			await _customerRepository.UpdateCustomerAsync(receivedCustomer.CustomerId, receivedCustomer.Email, receivedCustomer.Address, receivedCustomer.PostalCode, receivedCustomer.Residence);
 
 			return true;
 		}
 
 		private async Task<bool> HandleCustomerCreated(string message)
 		{
-			var receivedCustomer = JsonSerializer.Deserialize<CustomerCreatedEvent>(message);
+			var receivedCustomer = JsonSerializer.Deserialize<BaseCustomerMessageEvent>(message);
 
 			await _customerRepository.CreateCustomerAsync(receivedCustomer.Email, receivedCustomer.Address, receivedCustomer.PostalCode, receivedCustomer.Residence);
 

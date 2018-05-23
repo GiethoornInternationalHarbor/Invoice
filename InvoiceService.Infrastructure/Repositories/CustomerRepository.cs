@@ -28,9 +28,11 @@ namespace InvoiceService.Infrastructure.Repositories
 			throw new NotImplementedException();
 		}
 
-		public async Task<Customer> UpdateCustomerAsync(Customer customer)
+		public async Task UpdateCustomerAsync(string customerId, string email, string address, string postalCode, string residence)
 		{
-			throw new NotImplementedException();
+			var customer = await _eventRepository.GetByIdAsync(new CustomerId(customerId));
+			customer.UpdateCustomer(email, address, postalCode, residence);
+			await _eventRepository.SaveAsync(customer);
 		}
 	}
 }

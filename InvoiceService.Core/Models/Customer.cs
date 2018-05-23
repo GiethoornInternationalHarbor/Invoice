@@ -21,6 +21,11 @@ namespace InvoiceService.Core.Models
 			RaiseEvent(new CustomerCreatedEvent(customerId, email, address, postalCode, residence));
 		}
 
+		public void UpdateCustomer(string email, string address, string postalCode, string residence)
+		{
+			RaiseEvent(new CustomerUpdatedEvent(Id, Email, Address, PostalCode, Residence, email, address, postalCode, residence));
+		}
+
 		internal void Apply(CustomerCreatedEvent ev)
 		{
 			Id = ev.AggregateId;
@@ -28,6 +33,14 @@ namespace InvoiceService.Core.Models
 			Address = ev.Address;
 			PostalCode = ev.PostalCode;
 			Residence = ev.Residence;
+		}
+
+		internal void Apply(CustomerUpdatedEvent ev)
+		{
+			Email = ev.NewEmail;
+			Address = ev.NewAddress;
+			PostalCode = ev.NewPostalCode;
+			Residence = ev.NewResidence;
 		}
 	}
 }
