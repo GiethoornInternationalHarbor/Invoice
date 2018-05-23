@@ -25,4 +25,6 @@ WORKDIR /app
 # Copy the output from the build env
 COPY --from=publish /app/InvoiceService.App/out ./
 
+EXPOSE 5000
+
 ENTRYPOINT [ "dotnet", "InvoiceService.App.dll" ]
