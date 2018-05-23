@@ -12,12 +12,10 @@ namespace InvoiceService.Infrastructure.Repositories
 	public class RentalRepository : IRentalRepository
 	{
 		private readonly IEventSourcingRepository<Rental, RentalId> _eventRepository;
-		private readonly IInvoiceRepository _invoiceRepository;
 
-		public RentalRepository(IEventSourcingRepository<Rental, RentalId> eventRepository, IInvoiceRepository invoiceRepository)
+		public RentalRepository(IEventSourcingRepository<Rental, RentalId> eventRepository)
 		{
 			_eventRepository = eventRepository;
-			_invoiceRepository = invoiceRepository;
 		}
 
 		public async Task Accept(string rentalId, double price)
@@ -27,12 +25,12 @@ namespace InvoiceService.Infrastructure.Repositories
 			await _eventRepository.SaveAsync(rental);
 		}
 
-		public async Task CreateRental(string customerId, string rentalId, double price)
+		public async Task<RentalId> CreateRental(string customerId, string rentalId, double price)
 		{
 			Rental rental = new Rental(new RentalId(rentalId), new CustomerId(customerId), price);
 			await _eventRepository.SaveAsync(rental);
 
-			await _invoiceRepository.CreateInvoice(customerId, rentalId);
+			return rental.Id;
 		}
 
 		public async Task DeleteRental(string rentalId)

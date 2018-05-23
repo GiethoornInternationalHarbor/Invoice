@@ -31,9 +31,9 @@ namespace InvoiceService.Infrastructure.Repositories
 			await _eventRepository.SaveAsync(ship);
 		}
 
-		public Task<Ship> GetShip(string id)
+		public async Task<Ship> GetShip(string id)
 		{
-			return _eventRepository.GetByIdAsync(new ShipId(id));
+			return await _eventRepository.GetByIdAsync(new ShipId(id));
 		}
 	}
 }

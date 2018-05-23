@@ -11,12 +11,12 @@ namespace InvoiceService.Core.Models
 		/// <summary>
 		/// Gets or sets the name.
 		/// </summary>
-		protected string Name { get; set; }
+		public string Name { get; set; }
 
 		/// <summary>
 		/// Gets or sets the price.
 		/// </summary>
-		protected double Price { get; set; }
+		public double Price { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is deleted.
@@ -24,7 +24,7 @@ namespace InvoiceService.Core.Models
 		/// <value>
 		///   <c>true</c> if this instance is deleted; otherwise, <c>false</c>.
 		/// </value>
-		protected bool IsDeleted { get; set; }
+		public bool IsDeleted { get; set; }
 
 		private ShipService() { }
 

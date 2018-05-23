@@ -8,6 +8,7 @@ namespace InvoiceService.Core.EventSourcing.Events
 {
 	internal class ShipUndockedEvent : DomainEventBase<ShipId>
 	{
+		public ShipUndockedEvent() { }
 		internal ShipUndockedEvent(ShipId aggregateId) : base(aggregateId)
 		{
 		}

@@ -12,6 +12,8 @@ namespace InvoiceService.Core.EventSourcing.Events
 
 		public ShipId ShipId { get; private set; }
 
+		public InvoiceShipServiceAddedEvent() { }
+
 		internal InvoiceShipServiceAddedEvent(InvoiceId aggregateId, ShipServiceId shipServiceId, ShipId shipId) : base(aggregateId)
 		{
 			ShipServiceId = shipServiceId;

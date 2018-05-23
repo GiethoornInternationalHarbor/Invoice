@@ -35,6 +35,8 @@ namespace InvoiceService.Infrastructure.DI
 			services.AddSingleton(x => EventStoreConnection.Create(new Uri(configuration.GetSection("EVENT_STORE_URL").Value)));
 			services.AddTransient<IEventSourcingRepository<Customer, CustomerId>, EventSourcingRepository<Customer, CustomerId>>();
 			services.AddTransient<IEventSourcingRepository<Ship, ShipId>, EventSourcingRepository<Ship, ShipId>>();
+			services.AddTransient<IEventSourcingRepository<ShipService, ShipServiceId>, EventSourcingRepository<ShipService, ShipServiceId>>();
+			services.AddTransient<IEventSourcingRepository<Rental, RentalId>, EventSourcingRepository<Rental, RentalId>>();
 			services.AddTransient<IEventSourcingRepository<Invoice, InvoiceId>, EventSourcingRepository<Invoice, InvoiceId>>();
 			services.AddSingleton<IEventStore, EventStoreEventStore>();
 		}

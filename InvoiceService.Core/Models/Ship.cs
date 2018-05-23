@@ -7,12 +7,12 @@ namespace InvoiceService.Core.Models
 {
 	public class Ship : AggregateBase<ShipId>
 	{
-		private CustomerId CustomerId { get; set; }
+		public CustomerId CustomerId { get; set; }
 
 		/// <summary>
 		/// Gets or sets the name.
 		/// </summary>
-		private string Name { get; set; }
+		public string Name { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is out of harbor.
@@ -20,7 +20,9 @@ namespace InvoiceService.Core.Models
 		/// <value>
 		///   <c>true</c> if this instance is out of harbor; otherwise, <c>false</c>.
 		/// </value>
-		private bool IsOutOfHarbor { get; set; }
+		public bool IsOutOfHarbor { get; set; }
+
+		private Ship() { }
 
 		public Ship(ShipId shipId, CustomerId customerId, string name)
 		{

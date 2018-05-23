@@ -1,4 +1,5 @@
-﻿using InvoiceService.Core.Models;
+﻿using InvoiceService.Core.EventSourcing.Ids;
+using InvoiceService.Core.Models;
 using System.Threading.Tasks;
 
 namespace InvoiceService.Core.Repositories
@@ -27,7 +28,7 @@ namespace InvoiceService.Core.Repositories
 		/// <param name="rentalId">The rental identifier.</param>
 		/// <param name="price">The price.</param>
 		/// <returns></returns>
-		Task CreateRental(string customerId, string rentalId, double price);
+		Task<RentalId> CreateRental(string customerId, string rentalId, double price);
 
 		/// <summary>
 		/// Deletes the rental.

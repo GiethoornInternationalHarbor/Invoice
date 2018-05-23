@@ -7,10 +7,10 @@ namespace InvoiceService.Core.Models
 {
 	public class Rental : AggregateBase<RentalId>
 	{
-		private CustomerId CustomerId { get; set; }
-		private double Price { get; set; }
+		public CustomerId CustomerId { get; set; }
+		public double Price { get; set; }
 
-		private bool IsDeclined { get; set; }
+		public bool IsDeclined { get; set; }
 
 		private Rental() { }
 

@@ -10,6 +10,8 @@ namespace InvoiceService.Core.EventSourcing.Events
 	{
 		public CustomerId CustomerId { get; private set; }
 
+		public InvoiceCreatedEvent() { }
+
 		internal InvoiceCreatedEvent(InvoiceId aggregateId, CustomerId customerId) : base(aggregateId)
 		{
 			CustomerId = customerId;

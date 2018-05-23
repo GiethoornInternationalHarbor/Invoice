@@ -9,8 +9,13 @@ namespace InvoiceService.Core.Models
 {
 	public class Invoice : AggregateBase<InvoiceId>
 	{
-		private CustomerId CustomerId { get; set; }
-		private RentalId RentalId { get; set; }
+		public CustomerId CustomerId { get; set; }
+		public RentalId RentalId { get; set; }
+
+		/// <summary>
+		/// Gets or sets the invoice lines.
+		/// </summary>
+		public List<InvoiceLine> Lines { get; set; }
 
 		private Invoice()
 		{
@@ -57,36 +62,5 @@ namespace InvoiceService.Core.Models
 		{
 			RentalId = ev.RentalId;
 		}
-
-		/// <summary>
-		/// Gets or sets the identifier.
-		/// </summary>
-		//[Key]
-		//[Required]
-		//public Guid Id { get; set; }
-
-		/// <summary>
-		/// Gets or sets the ship.
-		/// </summary>
-		[Required]
-		private Ship Ship { get; set; }
-
-		/// <summary>
-		/// Gets or sets the customer.
-		/// </summary>
-		[Required]
-		private Customer Customer { get; set; }
-
-		/// <summary>
-		/// Gets or sets the invoice lines.
-		/// </summary>
-		[Required]
-		private List<InvoiceLine> Lines { get; set; }
-
-		/// <summary>
-		/// Gets or sets the invoice price.
-		/// </summary>
-		[Required]
-		private double Price { get; set; }
 	}
 }

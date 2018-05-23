@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using InvoiceService.App.Structs;
+using InvoiceService.Core.EventSourcing.Ids;
 using InvoiceService.Core.Messaging;
 using InvoiceService.Core.Models;
 using InvoiceService.Core.Repositories;
@@ -116,7 +117,8 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedRental = JsonSerializer.Deserialize<RentalMessageEvent>(message);
 
-			await _rentalRepository.CreateRental(receivedRental.CustomerId, receivedRental.RentalId, receivedRental.Price);
+			RentalId rentalId = await _rentalRepository.CreateRental(receivedRental.CustomerId, receivedRental.RentalId, receivedRental.Price);
+			await _invoiceRepository.CreateInvoice(receivedRental.CustomerId, rentalId.ToString());
 
 			return true;
 		}

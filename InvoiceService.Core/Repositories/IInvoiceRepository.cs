@@ -1,10 +1,25 @@
 ﻿using InvoiceService.Core.Models;
+using InvoiceService.Core.ReadModel;
 using System.Threading.Tasks;
 
 namespace InvoiceService.Core.Repositories
 {
 	public interface IInvoiceRepository
 	{
+		/// <summary>
+		/// Gets the invoices for customer.
+		/// </summary>
+		/// <param name="customerId">The customer identifier.</param>
+		/// <returns></returns>
+		Task<InvoiceOverviewReadModel> GetInvoicesForCustomer(string customerId);
+
+		/// <summary>
+		/// Gets the invoice.
+		/// </summary>
+		/// <param name="invoiceId">The invoice identifier.</param>
+		/// <returns></returns>
+		Task<InvoiceReadModel> GetInvoice(string invoiceId);
+
 		/// <summary>
 		/// Creates the invoice.
 		/// </summary>
@@ -27,6 +42,6 @@ namespace InvoiceService.Core.Repositories
 		/// <param name="shipId">The ship identifier.</param>
 		/// <param name="serviceId">The service identifier.</param>
 		/// <returns></returns>
-		Task<Invoice> AddShipServiceLineAsync(string invoiceId, string shipId, string serviceId);
+		Task AddShipServiceLineAsync(string invoiceId, string shipId, string serviceId);
 	}
 }
