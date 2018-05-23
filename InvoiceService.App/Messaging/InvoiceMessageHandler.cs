@@ -116,7 +116,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedRental = JsonSerializer.Deserialize<Rental>(message);
 
-			await _rentalRepository.CreateRental(receivedRental);
+			await _rentalRepository.CreateRental(receivedRental.Id, receivedRental.Price);
 
 			return true;
 		}

@@ -1,6 +1,7 @@
 ﻿using InvoiceService.Core.Models;
 using InvoiceService.Core.Repositories;
 using InvoiceService.Infrastructure.Database;
+using InvoiceService.Infrastructure.EventSourcing;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
@@ -9,33 +10,29 @@ namespace InvoiceService.Infrastructure.Repositories
 {
 	public class RentalRepository : IRentalRepository
 	{
-		private readonly InvoiceDbContextFactory _invoiceDbFactory;
+		private readonly IEventSourcingRepository<Rental, RentalId> _eventRepository;
 
-		public RentalRepository(InvoiceDbContextFactory invoiceDbContextFactory)
+		public RentalRepository(IEventSourcingRepository<Rental, RentalId> eventRepository)
 		{
-			_invoiceDbFactory = invoiceDbContextFactory;
+			_eventRepository = eventRepository;
 		}
 
-		public async Task<Rental> CreateRental(Rental rental)
+		public async Task CreateRental(string rentalId, double price)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			var rentalToAdd = (await dbContext.Rentals.AddAsync(rental)).Entity;
-			await dbContext.SaveChangesAsync();
-			return rentalToAdd;
+			Rental rental = new Rental(new RentalId(rentalId), price);
+			await _eventRepository.SaveAsync(rental);
 		}
 
-		public async Task DeleteRental(Guid id)
+		public async Task DeleteRental(string rentalId)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			var rentalToDelete = new Rental() { Id = id };
-			dbContext.Entry(rentalToDelete).State = EntityState.Deleted;
-			await dbContext.SaveChangesAsync();
+			var rental = await _eventRepository.GetByIdAsync(new RentalId(rentalId));
+			rental.Decline();
+			await _eventRepository.SaveAsync(rental);
 		}
 
-		public async Task<Rental> GetRental(Guid id)
+		public Task<Rental> GetRental(string rentalId)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			return await dbContext.Rentals.LastOrDefaultAsync(x => x.Id == id);
+			return _eventRepository.GetByIdAsync(new RentalId(rentalId));
 		}
 	}
 }

@@ -1,5 +1,4 @@
 ﻿using InvoiceService.Core.Models;
-using System;
 using System.Threading.Tasks;
 
 namespace InvoiceService.Core.Repositories
@@ -9,22 +8,23 @@ namespace InvoiceService.Core.Repositories
 		/// <summary>
 		/// Gets the rental.
 		/// </summary>
-		/// <param name="id">The identifier.</param>
+		/// <param name="rentalId">The rental identifier.</param>
 		/// <returns></returns>
-		Task<Rental> GetRental(Guid id);
+		Task<Rental> GetRental(string rentalId);
 
 		/// <summary>
 		/// Creates the rental.
 		/// </summary>
-		/// <param name="rental">The rental.</param>
+		/// <param name="rentalId">The rental identifier.</param>
+		/// <param name="price">The price.</param>
 		/// <returns></returns>
-		Task<Rental> CreateRental(Rental rental);
+		Task CreateRental(string rentalId, double price);
 
 		/// <summary>
 		/// Deletes the rental.
 		/// </summary>
-		/// <param name="id">The identifier.</param>
+		/// <param name="rentalId">The rental identifier.</param>
 		/// <returns></returns>
-		Task DeleteRental(Guid id);
+		Task DeleteRental(string rentalId);
 	}
 }

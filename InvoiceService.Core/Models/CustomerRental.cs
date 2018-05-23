@@ -12,6 +12,6 @@ namespace InvoiceService.Core.Models
 		/// <summary>
 		/// Gets or sets the rental identifier.
 		/// </summary>
-		public Guid RentalId { get; set; }
+		public string RentalId { get; set; }
 	}
 }

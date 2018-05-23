@@ -9,6 +9,7 @@
 		CustomerDeleted,
 		RentalRequested,
 		RentalAccepted,
+		RentalDeclined,
 		ServiceCreated,
 		ServiceUpdated,
 		ServiceDeleted,
