@@ -3,41 +3,41 @@ using System.Threading.Tasks;
 using InvoiceService.Core.Models;
 using InvoiceService.Core.Repositories;
 using InvoiceService.Infrastructure.Database;
+using InvoiceService.Infrastructure.EventSourcing;
 using Microsoft.EntityFrameworkCore;
 
 namespace InvoiceService.Infrastructure.Repositories
 {
 	public class ShipRepository : IShipRepository
 	{
-		private readonly IInvoiceRepository _invoiceRepository;
-		private readonly InvoiceDbContextFactory _invoiceDbFactory;
+		private readonly IEventSourcingRepository<Ship, ShipId> _eventRepository;
 
-		public ShipRepository(IInvoiceRepository invoiceRepository, InvoiceDbContextFactory invoiceDbContextFactory)
+		public ShipRepository(IEventSourcingRepository<Ship, ShipId> repo)
 		{
-			_invoiceDbFactory = invoiceDbContextFactory;
-			_invoiceRepository = invoiceRepository;
+			_eventRepository = repo;
 		}
 
-		public async Task<Ship> CreateShip(Ship ship)
+		public async Task CreateShip(string customerId, string shipName)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			var shipToAdd = (await dbContext.Ships.AddAsync(ship)).Entity;
-			await dbContext.SaveChangesAsync();
-			return shipToAdd;
+			Ship ship = new Ship(ShipId.NewShipServiceId(), new CustomerId(customerId), shipName);
+			await _eventRepository.SaveAsync(ship);
 		}
 
 		public async Task DeleteShip(Guid id)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
+			throw new NotImplementedException();
+
+			/*InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
 			var shipToDelete = new Ship() { Id = id };
 			dbContext.Entry(shipToDelete).State = EntityState.Deleted;
-			await dbContext.SaveChangesAsync();
+			await dbContext.SaveChangesAsync();*/
 		}
 
 		public Task<Ship> GetShip(Guid id)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			return dbContext.Ships.LastOrDefaultAsync(x => x.Id == id);
+			/*InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
+			return dbContext.Ships.LastOrDefaultAsync(x => x.Id == id);*/
+			throw new NotImplementedException();
 		}
 	}
 }

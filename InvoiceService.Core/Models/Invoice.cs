@@ -57,24 +57,24 @@ namespace InvoiceService.Core.Models
 		/// Gets or sets the ship.
 		/// </summary>
 		[Required]
-		public Ship Ship { get; set; }
+		private Ship Ship { get; set; }
 
 		/// <summary>
 		/// Gets or sets the customer.
 		/// </summary>
 		[Required]
-		public Customer Customer { get; set; }
+		private Customer Customer { get; set; }
 
 		/// <summary>
 		/// Gets or sets the invoice lines.
 		/// </summary>
 		[Required]
-		public List<InvoiceLine> Lines { get; set; }
+		private List<InvoiceLine> Lines { get; set; }
 
 		/// <summary>
 		/// Gets or sets the invoice price.
 		/// </summary>
 		[Required]
-		public double Price { get; set; }
+		private double Price { get; set; }
 	}
 }
