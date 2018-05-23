@@ -9,6 +9,9 @@ using InvoiceService.Core.Messaging;
 using InvoiceService.Infrastructure.Messaging;
 using Polly;
 using System.Threading.Tasks;
+using EventStore.ClientAPI;
+using InvoiceService.Infrastructure.EventSourcing;
+using InvoiceService.Core.Models;
 
 namespace InvoiceService.Infrastructure.DI
 {
@@ -27,6 +30,10 @@ namespace InvoiceService.Infrastructure.DI
 
 			services.AddSingleton<IMessageHandler, RabbitMQMessageHandler>((provider) => new RabbitMQMessageHandler(configuration.GetSection("AMQP_URL").Value));
 			services.AddTransient<IMessagePublisher, RabbitMQMessagePublisher>((provider) => new RabbitMQMessagePublisher(configuration.GetSection("AMQP_URL").Value));
+
+			services.AddSingleton(x => EventStoreConnection.Create(new Uri(configuration.GetSection("EVENT_STORE_URL").Value)));
+			services.AddTransient<IEventSourcingRepository<Invoice, InvoiceId>, EventSourcingRepository<Invoice, InvoiceId>>();
+			services.AddSingleton<IEventStore, EventStoreEventStore>();
 		}
 
 		public static void OnServicesSetup(IServiceProvider serviceProvider)
