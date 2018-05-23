@@ -15,9 +15,12 @@ namespace InvoiceService.Core.Repositories
 		/// <summary>
 		/// Creates the customer asynchronous.
 		/// </summary>
-		/// <param name="customer">The customer.</param>
+		/// <param name="email">The email.</param>
+		/// <param name="address">The address.</param>
+		/// <param name="postalCode">The postal code.</param>
+		/// <param name="residence">The residence.</param>
 		/// <returns></returns>
-		Task<Customer> CreateCustomerAsync(Customer customer);
+		Task CreateCustomerAsync(string email, string address, string postalCode, string residence);
 
 		/// <summary>
 		/// Updates the customer asynchronous.
