@@ -6,6 +6,7 @@
 		InvoiceCreated,
 		CustomerCreated,
 		CustomerUpdated,
+		CustomerDeleted,
 		RentalRequested,
 		RentalAccepted,
 		ServiceCreated,

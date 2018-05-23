@@ -17,9 +17,9 @@ namespace InvoiceService.Infrastructure.Repositories
 			_eventRepository = eventRepository;
 		}
 
-		public async Task CreateCustomerAsync(string email, string address, string postalCode, string residence)
+		public async Task CreateCustomerAsync(string customerId, string email, string address, string postalCode, string residence)
 		{
-			Customer customer = new Customer(new CustomerId(), email, address, postalCode, residence);
+			Customer customer = new Customer(new CustomerId(customerId), email, address, postalCode, residence);
 			await _eventRepository.SaveAsync(customer);
 		}
 
@@ -34,5 +34,13 @@ namespace InvoiceService.Infrastructure.Repositories
 			customer.UpdateCustomer(email, address, postalCode, residence);
 			await _eventRepository.SaveAsync(customer);
 		}
+
+		public async Task DeleteCustomerAsync(string customerId)
+		{
+			var customer = await _eventRepository.GetByIdAsync(new CustomerId(customerId));
+			customer.Delete();
+			await _eventRepository.SaveAsync(customer);
+		}
 	}
+
 }

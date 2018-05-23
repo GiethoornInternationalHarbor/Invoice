@@ -76,6 +76,10 @@ namespace InvoiceService.App.Messaging
 					{
 						return await HandleShipUndocked(message);
 					}
+				case MessageTypes.CustomerDeleted:
+					{
+						return await HandleCustomerDeleted(message);
+					}
 			}
 
 			return true;
@@ -94,7 +98,16 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedCustomer = JsonSerializer.Deserialize<CustomerMessageEvent>(message);
 
-			await _customerRepository.CreateCustomerAsync(receivedCustomer.Email, receivedCustomer.Address, receivedCustomer.PostalCode, receivedCustomer.Residence);
+			await _customerRepository.CreateCustomerAsync(receivedCustomer.CustomerId, receivedCustomer.Email, receivedCustomer.Address, receivedCustomer.PostalCode, receivedCustomer.Residence);
+
+			return true;
+		}
+
+		private async Task<bool> HandleCustomerDeleted(string message)
+		{
+			var receivedCustomer = JsonSerializer.Deserialize<CustomerMessageEvent>(message);
+
+			await _customerRepository.DeleteCustomerAsync(receivedCustomer.CustomerId);
 
 			return true;
 		}
