@@ -9,6 +9,7 @@ namespace InvoiceService.Infrastructure.Repositories
 	public class CustomerRepository : ICustomerRepository
 	{
 		private readonly InvoiceDbContextFactory _invoiceDbFactory;
+		private readonly IEventSourcingRepository<Customer> _eventRepository;
 
 		public CustomerRepository(InvoiceDbContextFactory invoiceDbContextFactory)
 		{
