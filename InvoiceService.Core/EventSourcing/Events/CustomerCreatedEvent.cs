@@ -1,9 +1,9 @@
 ﻿using InvoiceService.Core.EventSourcing;
 using InvoiceService.Core.Models;
 
-namespace InvoiceService.Core.Events
+namespace InvoiceService.Core.EventSourcing.Events
 {
-	public class CustomerCreatedEvent : DomainEventBase<CustomerId>
+	internal class CustomerCreatedEvent : DomainEventBase<CustomerId>
 	{
 		public string Email { get; set; }
 

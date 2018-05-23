@@ -1,7 +1,6 @@
-﻿using InvoiceService.Core.Events;
-using InvoiceService.Core.EventSourcing;
+﻿using InvoiceService.Core.EventSourcing;
+using InvoiceService.Core.EventSourcing.Events;
 using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace InvoiceService.Core.Models
 {

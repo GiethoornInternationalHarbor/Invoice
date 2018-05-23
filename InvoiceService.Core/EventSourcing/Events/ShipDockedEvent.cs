@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace InvoiceService.Core.Events
+namespace InvoiceService.Core.EventSourcing.Events
 {
-	public class ShipDockedEvent : DomainEventBase<ShipId>
+	internal class ShipDockedEvent : DomainEventBase<ShipId>
 	{
 		public CustomerId CustomerId { get; private set; }
 		public string Name { get; private set; }

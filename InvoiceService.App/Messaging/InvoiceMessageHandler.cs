@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using InvoiceService.App.Structs;
-using InvoiceService.Core.Events;
 using InvoiceService.Core.Messaging;
 using InvoiceService.Core.Messaging.Events;
 using InvoiceService.Core.Models;
