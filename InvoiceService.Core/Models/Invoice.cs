@@ -1,4 +1,6 @@
 ﻿using InvoiceService.Core.EventSourcing;
+using InvoiceService.Core.EventSourcing.Events;
+using InvoiceService.Core.EventSourcing.Ids;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -27,7 +29,7 @@ namespace InvoiceService.Core.Models
 			{
 				throw new ArgumentNullException(nameof(shipServiceId));
 			}
-			RaiseEvent(new ShipServiceAddedEvent(shipServiceId, shipId));
+			RaiseEvent(new InvoiceShipServiceAddedEvent(shipServiceId, shipId));
 		}
 
 		internal void Apply(InvoiceCreatedEvent ev)
@@ -36,7 +38,7 @@ namespace InvoiceService.Core.Models
 			CustomerId = ev.CustomerId;
 		}
 
-		internal void Apply(ShipServiceAddedEvent ev)
+		internal void Apply(InvoiceShipServiceAddedEvent ev)
 		{
 			Lines.Add(new InvoiceLine()
 			{

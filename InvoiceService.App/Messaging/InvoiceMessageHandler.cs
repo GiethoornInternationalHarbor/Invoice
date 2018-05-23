@@ -136,39 +136,39 @@ namespace InvoiceService.App.Messaging
 
 		private async Task<bool> HandleServiceCompleted(string message)
 		{
-			var receivedShipServiceObject = JsonSerializer.Deserialize<ShipServiceObject>(message);
+			var receivedShipServiceObject = JsonSerializer.Deserialize<ShipServiceCompletedMessageEvent>(message);
 			var ship = await _shipRepository.GetShip(receivedShipServiceObject.ShipId);
-			var shipService = await _shipServiceRepository.GetShipService(receivedShipServiceObject.ServiceId);
+			// TODO: Re-enable
+			//var shipService = await _shipServiceRepository.GetShipService(receivedShipServiceObject.ServiceId);
 			var customer = await _customerRepository.GetCustomerAsync(receivedShipServiceObject.CustomerId);
-
-			await _invoiceRepository.AddShipServiceLineAsync(customer, ship, shipService);
+			//await _invoiceRepository.AddShipServiceLineAsync(customer, ship, shipService);
 
 			return true;
 		}
 
 		private async Task<bool> HandleServiceCreated(string message)
 		{
-			var receivedShipService = JsonSerializer.Deserialize<ShipService>(message);
+			var receivedShipService = JsonSerializer.Deserialize<ShipServiceCudMessageEvent>(message);
 
-			await _shipServiceRepository.CreateShipService(receivedShipService);
+			await _shipServiceRepository.CreateShipService(receivedShipService.ServiceId, receivedShipService.Name, receivedShipService.Price);
 
 			return true;
 		}
 
 		private async Task<bool> HandleServiceDeleted(string message)
 		{
-			var shipServiceId = Guid.Parse(message);
+			var shipService = JsonSerializer.Deserialize<ShipServiceCudMessageEvent>(message);
 
-			await _shipServiceRepository.DeleteShipService(shipServiceId);
+			await _shipServiceRepository.DeleteShipService(shipService.ServiceId);
 
 			return true;
 		}
 
 		private async Task<bool> HandleServiceUpdated(string message)
 		{
-			var receivedShipService = JsonSerializer.Deserialize<ShipService>(message);
+			var receivedShipService = JsonSerializer.Deserialize<ShipServiceCudMessageEvent>(message);
 
-			await _shipServiceRepository.UpdateShipService(receivedShipService);
+			await _shipServiceRepository.UpdateShipService(receivedShipService.ServiceId, receivedShipService.Name, receivedShipService.Price);
 
 			return true;
 		}
@@ -184,11 +184,11 @@ namespace InvoiceService.App.Messaging
 
 		private async Task<bool> HandleShipUndocked(string message)
 		{
-			var receivedShip = JsonSerializer.Deserialize<CustomerShip>(message);
+			var receivedShip = JsonSerializer.Deserialize<ShipUndockedMessageEvent>(message);
 
-			var invoice = await _invoiceRepository.GetInvoiceByEmail(receivedShip.CustomerId);
-
-			await _messagePublisher.PublishMessageAsync(MessageTypes.InvoiceCreated, invoice);
+			// TODO: Re-enable
+			//var invoice = await _invoiceRepository.GetInvoiceByEmail(receivedShip.CustomerId);
+			//await _messagePublisher.PublishMessageAsync(MessageTypes.InvoiceCreated, invoice);
 
 			await _shipRepository.DeleteShip(receivedShip.ShipId);
 

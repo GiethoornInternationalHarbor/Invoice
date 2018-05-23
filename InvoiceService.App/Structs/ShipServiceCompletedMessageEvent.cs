@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace InvoiceService.Core.Models
+namespace InvoiceService.App.Structs
 {
-	public class ShipServiceObject
+	public struct ShipServiceCompletedMessageEvent
 	{
 		/// <summary>
 		/// Gets or sets the customer identifier.
@@ -12,11 +15,11 @@ namespace InvoiceService.Core.Models
 		/// <summary>
 		/// Gets or sets the ship identifier.
 		/// </summary>
-		public Guid ShipId { get; set; }
+		public string ShipId { get; set; }
 
 		/// <summary>
 		/// Gets or sets the service identifier.
 		/// </summary>
-		public Guid ServiceId { get; set; }
+		public string ServiceId { get; set; }
 	}
 }

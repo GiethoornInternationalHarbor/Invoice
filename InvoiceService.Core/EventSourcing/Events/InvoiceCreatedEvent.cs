@@ -1,9 +1,15 @@
-﻿using InvoiceService.Core.EventSourcing;
+﻿using InvoiceService.Core.EventSourcing.Ids;
+using InvoiceService.Core.Models;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace InvoiceService.Core.Models
+namespace InvoiceService.Core.EventSourcing.Events
 {
-	public class InvoiceCreatedEvent : DomainEventBase<InvoiceId>
-	{	 
+	internal class InvoiceCreatedEvent : DomainEventBase<InvoiceId>
+	{
+		public CustomerId CustomerId { get; private set; }
+
 		internal InvoiceCreatedEvent(InvoiceId aggregateId, CustomerId customerId) : base(aggregateId)
 		{
 			CustomerId = customerId;
@@ -13,8 +19,6 @@ namespace InvoiceService.Core.Models
 		{
 			CustomerId = customerId;
 		}
-
-		public CustomerId CustomerId { get; private set; }
 
 		public override IDomainEvent<InvoiceId> WithAggregate(InvoiceId aggregateId, long aggregateVersion)
 		{

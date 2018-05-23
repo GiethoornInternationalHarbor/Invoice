@@ -1,4 +1,5 @@
-﻿using InvoiceService.Core.Models;
+﻿using InvoiceService.Core.EventSourcing.Ids;
+using InvoiceService.Core.Models;
 using InvoiceService.Core.Repositories;
 using InvoiceService.Infrastructure.Database;
 using InvoiceService.Infrastructure.EventSourcing;
@@ -23,9 +24,9 @@ namespace InvoiceService.Infrastructure.Repositories
 			await _eventRepository.SaveAsync(customer);
 		}
 
-		public Task<Customer> GetCustomerAsync(string email)
+		public Task<Customer> GetCustomerAsync(string customerId)
 		{
-			throw new NotImplementedException();
+			return _eventRepository.GetByIdAsync(new CustomerId(customerId));
 		}
 
 		public async Task UpdateCustomerAsync(string customerId, string email, string address, string postalCode, string residence)

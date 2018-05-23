@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using EventStore.ClientAPI;
 using InvoiceService.Infrastructure.EventSourcing;
 using InvoiceService.Core.Models;
+using InvoiceService.Core.EventSourcing.Ids;
 
 namespace InvoiceService.Infrastructure.DI
 {

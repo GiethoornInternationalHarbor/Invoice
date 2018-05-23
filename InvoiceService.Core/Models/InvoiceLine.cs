@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InvoiceService.Core.EventSourcing.Ids;
+using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace InvoiceService.Core.Models
