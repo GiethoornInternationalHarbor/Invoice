@@ -6,6 +6,14 @@ namespace InvoiceService.Core.Repositories
 	public interface IInvoiceRepository
 	{
 		/// <summary>
+		/// Creates the invoice.
+		/// </summary>
+		/// <param name="customerId">The customer identifier.</param>
+		/// <param name="rentalId">The rental identifier.</param>
+		/// <returns></returns>
+		Task CreateInvoice(string customerId, string rentalId);
+
+		/// <summary>
 		/// Gets the invoice.
 		/// </summary>
 		/// <param name="email">The email.</param>

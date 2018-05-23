@@ -79,5 +79,10 @@ namespace InvoiceService.Infrastructure.Repositories
 			/*InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
 			return await dbContext.Invoices.LastOrDefaultAsync(x => x.Customer.Email == email);*/
 		}
+
+		public Task CreateInvoice(string customerId, string rentalId)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }
