@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using InvoiceService.Core.Events;
 using InvoiceService.Core.Messaging;
+using InvoiceService.Core.Messaging.Events;
 using InvoiceService.Core.Models;
 using InvoiceService.Core.Repositories;
 using Utf8Json;
@@ -162,9 +163,9 @@ namespace InvoiceService.App.Messaging
 
 		private async Task<bool> HandleShipDocked(string message)
 		{
-			var receivedShip = JsonSerializer.Deserialize<ShipDockedEvent>(message);
+			var receivedShip = Newtonsoft.Json.JsonConvert.DeserializeObject<ShipDockedMessageEvent>(message);
 
-			await _shipRepository.CreateShip(receivedShip.CustomerId.IdAsString(), receivedShip.Name);
+			await _shipRepository.CreateShip(receivedShip.CustomerId, receivedShip.Name);
 
 			return true;
 		}
