@@ -156,7 +156,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedShipService = JsonSerializer.Deserialize<ShipServiceCudMessageEvent>(message);
 
-			await _shipServiceRepository.CreateShipService(receivedShipService.ServiceId, receivedShipService.Name, receivedShipService.Price);
+			await _shipServiceRepository.CreateShipService(receivedShipService.Id, receivedShipService.Name, receivedShipService.Price);
 
 			return true;
 		}
@@ -165,7 +165,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var shipService = JsonSerializer.Deserialize<ShipServiceCudMessageEvent>(message);
 
-			await _shipServiceRepository.DeleteShipService(shipService.ServiceId);
+			await _shipServiceRepository.DeleteShipService(shipService.Id);
 
 			return true;
 		}
@@ -174,7 +174,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedShipService = JsonSerializer.Deserialize<ShipServiceCudMessageEvent>(message);
 
-			await _shipServiceRepository.UpdateShipService(receivedShipService.ServiceId, receivedShipService.Name, receivedShipService.Price);
+			await _shipServiceRepository.UpdateShipService(receivedShipService.Id, receivedShipService.Name, receivedShipService.Price);
 
 			return true;
 		}

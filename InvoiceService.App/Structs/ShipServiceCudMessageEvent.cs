@@ -10,7 +10,7 @@ namespace InvoiceService.App.Structs
 		/// <summary>
 		/// Gets or sets the service identifier.
 		/// </summary>
-		public string ServiceId { get; set; }
+		public string Id { get; set; }
 
 		/// <summary>
 		/// Gets or sets the name.
