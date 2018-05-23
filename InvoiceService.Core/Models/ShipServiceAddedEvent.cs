@@ -6,19 +6,23 @@ namespace InvoiceService.Core.Models
 	{
 		public ShipServiceId ShipServiceId { get; private set; }
 
-		internal ShipServiceAddedEvent(ShipServiceId shipServiceId) : base()
+		public ShipId ShipId { get; private set; }
+
+		internal ShipServiceAddedEvent(ShipServiceId shipServiceId, ShipId shipId) : base()
 		{
 			ShipServiceId = shipServiceId;
+			ShipId = shipId;
 		}
 
-		private ShipServiceAddedEvent(InvoiceId aggregateId, long aggregateVersion, ShipServiceId shipServiceId) : base(aggregateId, aggregateVersion)
+		private ShipServiceAddedEvent(InvoiceId aggregateId, long aggregateVersion, ShipServiceId shipServiceId, ShipId shipId) : base(aggregateId, aggregateVersion)
 		{
 			ShipServiceId = shipServiceId;
+			ShipId = shipId;
 		}
 
 		public override IDomainEvent<InvoiceId> WithAggregate(InvoiceId aggregateId, long aggregateVersion)
 		{
-			return new ShipServiceAddedEvent(aggregateId, aggregateVersion, ShipServiceId);
+			return new ShipServiceAddedEvent(aggregateId, aggregateVersion, ShipServiceId, ShipId);
 		}
 	}
 }

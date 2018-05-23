@@ -21,19 +21,29 @@ namespace InvoiceService.Core.Models
 			RaiseEvent(new InvoiceCreatedEvent(invoiceId, customerId));
 		}
 
-		public void AddShipService(ShipServiceId shipServiceId)
+		public void AddShipService(ShipServiceId shipServiceId, ShipId shipId)
 		{
 			if (shipServiceId == null)
 			{
 				throw new ArgumentNullException(nameof(shipServiceId));
 			}
-			RaiseEvent(new ShipServiceAddedEvent(shipServiceId));
+			RaiseEvent(new ShipServiceAddedEvent(shipServiceId, shipId));
 		}
 
 		internal void Apply(InvoiceCreatedEvent ev)
 		{
 			Id = ev.AggregateId;
 			CustomerId = ev.CustomerId;
+		}
+
+		internal void Apply(ShipServiceAddedEvent ev)
+		{
+			Lines.Add(new InvoiceLine()
+			{
+				InvoiceType = InvoiceTypes.ShipService,
+				ServiceId = ev.ShipServiceId,
+				ShipId = ev.ShipId
+			});
 		}
 
 		/// <summary>
