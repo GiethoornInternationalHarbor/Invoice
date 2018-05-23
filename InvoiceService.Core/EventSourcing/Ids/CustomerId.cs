@@ -1,7 +1,7 @@
 ﻿using InvoiceService.Core.EventSourcing;
 using System;
 
-namespace InvoiceService.Core.Models
+namespace InvoiceService.Core.EventSourcing.Ids
 {
 	public class CustomerId : AggregateIdBase
 	{

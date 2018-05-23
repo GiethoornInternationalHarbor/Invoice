@@ -1,5 +1,6 @@
 ﻿using InvoiceService.Core.EventSourcing;
 using InvoiceService.Core.EventSourcing.Events;
+using InvoiceService.Core.EventSourcing.Ids;
 using System;
 using System.ComponentModel.DataAnnotations;
 

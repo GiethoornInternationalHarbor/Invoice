@@ -1,4 +1,5 @@
-﻿using InvoiceService.Core.Models;
+﻿using InvoiceService.Core.EventSourcing.Ids;
+using InvoiceService.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
