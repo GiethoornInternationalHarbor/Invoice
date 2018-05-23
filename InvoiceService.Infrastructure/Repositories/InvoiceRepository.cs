@@ -1,6 +1,8 @@
-﻿using InvoiceService.Core.Models;
+﻿using InvoiceService.Core.EventSourcing.Ids;
+using InvoiceService.Core.Models;
 using InvoiceService.Core.Repositories;
 using InvoiceService.Infrastructure.Database;
+using InvoiceService.Infrastructure.EventSourcing;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
@@ -9,13 +11,13 @@ namespace InvoiceService.Infrastructure.Repositories
 {
 	public class InvoiceRepository : IInvoiceRepository
 	{
-		private readonly IRentalRepository _rentalRepository;
-		private readonly InvoiceDbContextFactory _invoiceDbFactory;
+		private readonly IEventSourcingRepository<Invoice, InvoiceId> _eventRepository;
+		private readonly ICustomerRepository _customerRepository;
 
-		public InvoiceRepository(InvoiceDbContextFactory invoiceDbContextFactory, IRentalRepository rentalRepository)
+		public InvoiceRepository(IEventSourcingRepository<Invoice, InvoiceId> eventRepo, ICustomerRepository customerRepository)
 		{
-			_invoiceDbFactory = invoiceDbContextFactory;
-			_rentalRepository = rentalRepository;
+			_eventRepository = eventRepo;
+			_customerRepository = customerRepository;
 		}
 
 		private async Task<Invoice> CreateInvoiceAsync(Invoice invoice)
@@ -80,9 +82,13 @@ namespace InvoiceService.Infrastructure.Repositories
 			return await dbContext.Invoices.LastOrDefaultAsync(x => x.Customer.Email == email);*/
 		}
 
-		public Task CreateInvoice(string customerId, string rentalId)
+		public async Task CreateInvoice(string customerId, string rentalId)
 		{
-			throw new NotImplementedException();
+			Invoice invoice = new Invoice(new InvoiceId(), new CustomerId());
+			invoice.SetRental(new RentalId(rentalId));
+
+			await _eventRepository.SaveAsync(invoice);
+			await _customerRepository.AddInvoice(customerId, invoice.Id.ToString());
 		}
 	}
 }

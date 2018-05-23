@@ -42,6 +42,14 @@ namespace InvoiceService.Infrastructure.Repositories
 			customer.Delete();
 			await _eventRepository.SaveAsync(customer);
 		}
+
+		public async Task AddInvoice(string customerId, string invoiceId)
+		{
+			Customer customer = await _eventRepository.GetByIdAsync(new CustomerId(customerId));
+			customer.AddInvoice(invoiceId);
+
+			await _eventRepository.SaveAsync(customer);
+		}
 	}
 
 }

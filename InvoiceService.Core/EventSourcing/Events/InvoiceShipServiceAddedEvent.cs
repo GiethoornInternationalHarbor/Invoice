@@ -12,7 +12,7 @@ namespace InvoiceService.Core.EventSourcing.Events
 
 		public ShipId ShipId { get; private set; }
 
-		internal InvoiceShipServiceAddedEvent(ShipServiceId shipServiceId, ShipId shipId) : base()
+		internal InvoiceShipServiceAddedEvent(InvoiceId aggregateId, ShipServiceId shipServiceId, ShipId shipId) : base(aggregateId)
 		{
 			ShipServiceId = shipServiceId;
 			ShipId = shipId;

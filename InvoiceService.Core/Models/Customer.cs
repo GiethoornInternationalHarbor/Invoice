@@ -2,6 +2,7 @@
 using InvoiceService.Core.EventSourcing.Events;
 using InvoiceService.Core.EventSourcing.Ids;
 using System;
+using System.Collections.Generic;
 
 namespace InvoiceService.Core.Models
 {
@@ -17,7 +18,12 @@ namespace InvoiceService.Core.Models
 
 		private bool IsDeleted { get; set; }
 
-		private Customer() { }
+		private List<InvoiceId> Invoices { get; set; }
+
+		private Customer()
+		{
+			Invoices = new List<InvoiceId>();
+		}
 
 		public Customer(CustomerId customerId, string email, string address, string postalCode, string residence)
 		{
@@ -41,6 +47,14 @@ namespace InvoiceService.Core.Models
 			}
 		}
 
+		public void AddInvoice(string invoiceId)
+		{
+			if (IsDeleted)
+				return;
+
+			RaiseEvent(new CustomerInvoiceAddedEvent(Id, invoiceId));
+		}
+
 		internal void Apply(CustomerCreatedEvent ev)
 		{
 			Id = ev.AggregateId;
@@ -61,6 +75,11 @@ namespace InvoiceService.Core.Models
 		internal void Apply(CustomerDeletedEvent ev)
 		{
 			IsDeleted = true;
+		}
+
+		internal void Apply(CustomerInvoiceAddedEvent ev)
+		{
+			Invoices.Add(new InvoiceId(ev.InvoiceId));
 		}
 	}
 }

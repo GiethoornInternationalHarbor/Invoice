@@ -29,7 +29,12 @@ namespace InvoiceService.Core.Models
 			{
 				throw new ArgumentNullException(nameof(shipServiceId));
 			}
-			RaiseEvent(new InvoiceShipServiceAddedEvent(shipServiceId, shipId));
+			RaiseEvent(new InvoiceShipServiceAddedEvent(Id, shipServiceId, shipId));
+		}
+
+		public void SetRental(RentalId rentalId)
+		{
+			RaiseEvent(new InvoiceRentalSetEvent(Id, rentalId));
 		}
 
 		internal void Apply(InvoiceCreatedEvent ev)

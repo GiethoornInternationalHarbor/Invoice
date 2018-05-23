@@ -8,9 +8,9 @@ namespace InvoiceService.Core.Repositories
 		/// <summary>
 		/// Gets the customer asynchronous.
 		/// </summary>
-		/// <param name="email">The email.</param>
+		/// <param name="customerId">The customer identifier.</param>
 		/// <returns></returns>
-		Task<Customer> GetCustomerAsync(string email);
+		Task<Customer> GetCustomerAsync(string customerId);
 
 		/// <summary>
 		/// Creates the customer asynchronous.
@@ -40,5 +40,13 @@ namespace InvoiceService.Core.Repositories
 		/// <param name="customerId">The customer identifier.</param>
 		/// <returns></returns>
 		Task DeleteCustomerAsync(string customerId);
+
+		/// <summary>
+		/// Adds the invoice.
+		/// </summary>
+		/// <param name="customerId">The customer identifier.</param>
+		/// <param name="invoiceId">The invoice identifier.</param>
+		/// <returns></returns>
+		Task AddInvoice(string customerId, string invoiceId);
 	}
 }
