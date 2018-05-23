@@ -62,7 +62,7 @@ namespace InvoiceService.App
 			IMessageHandler messageHandler = app.ApplicationServices.GetService<IMessageHandler>();
 			IMessageHandlerCallback messageHandlerCallback = app.ApplicationServices.GetService<IMessageHandlerCallback>();
 
-			DIHelper.OnServicesSetup(app.ApplicationServices);
+			//DIHelper.OnServicesSetup(app.ApplicationServices);
 
 			app.UseMvc();
 
