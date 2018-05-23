@@ -1,11 +1,14 @@
-﻿using System;
+﻿using InvoiceService.Core.EventSourcing;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace InvoiceService.Core.Models
 {
-	public class Invoice
+	public class Invoice : AggregateBase<InvoiceId>
 	{
+
+
 		/// <summary>
 		/// Gets or sets the identifier.
 		/// </summary>
