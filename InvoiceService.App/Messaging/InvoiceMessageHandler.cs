@@ -81,6 +81,8 @@ namespace InvoiceService.App.Messaging
 					{
 						return await HandleCustomerDeleted(message);
 					}
+				case MessageTypes.RentalDeclined:
+					return await HandleRentalDeclined(message);
 			}
 
 			return true;
@@ -128,6 +130,15 @@ namespace InvoiceService.App.Messaging
 			var customerRental = JsonSerializer.Deserialize<RentalMessageEvent>(message);
 
 			await _rentalRepository.Accept(customerRental.RentalId, customerRental.Price);
+
+			return true;
+		}
+
+		private async Task<bool> HandleRentalDeclined(string message)
+		{
+			var customerRental = JsonSerializer.Deserialize<RentalMessageEvent>(message);
+
+			await _rentalRepository.DeleteRental(customerRental.RentalId);
 
 			return true;
 		}
