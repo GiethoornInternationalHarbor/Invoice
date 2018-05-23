@@ -18,32 +18,39 @@ namespace InvoiceService.Infrastructure.Repositories
 
 		public async Task<ShipService> CreateShipService(ShipService shipService)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
+			throw new NotImplementedException();
+
+			/*InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
 			var shipServiceToAdd = (await dbContext.ShipServices.AddAsync(shipService)).Entity;
 			await dbContext.SaveChangesAsync();
-			return shipServiceToAdd;
+			return shipServiceToAdd;*/
 		}
 
 		public async Task DeleteShipService(Guid id)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
+			throw new NotImplementedException();
+			/*InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
 			var shipServiceToDelete = new Ship() { Id = id };
 			dbContext.Entry(shipServiceToDelete).State = EntityState.Deleted;
-			await dbContext.SaveChangesAsync();
+			await dbContext.SaveChangesAsync();*/
 		}
 
 		public Task<ShipService> GetShipService(Guid id)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			return dbContext.ShipServices.LastOrDefaultAsync(x => x.Id == id);
+			throw new NotImplementedException();
+
+			/*InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
+			return dbContext.ShipServices.LastOrDefaultAsync(x => x.Id == id);*/
 		}
 
 		public async Task<ShipService> UpdateShipService(ShipService shipService)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
+			throw new NotImplementedException();
+
+			/*InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
 			var updatedShipService = dbContext.ShipServices.Update(shipService);
 			await dbContext.SaveChangesAsync();
-			return updatedShipService.Entity;
+			return updatedShipService.Entity;*/
 		}
 	}
 }
