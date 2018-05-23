@@ -85,7 +85,7 @@ namespace InvoiceService.App.Messaging
 
 		private async Task<bool> HandleCustomerUpdated(string message)
 		{
-			var receivedCustomer = JsonSerializer.Deserialize<CustomerUpdatedMessageEvent>(message);
+			var receivedCustomer = JsonSerializer.Deserialize<CustomerMessageEvent>(message);
 
 			await _customerRepository.UpdateCustomerAsync(receivedCustomer.CustomerId, receivedCustomer.Email, receivedCustomer.Address, receivedCustomer.PostalCode, receivedCustomer.Residence);
 
@@ -94,7 +94,7 @@ namespace InvoiceService.App.Messaging
 
 		private async Task<bool> HandleCustomerCreated(string message)
 		{
-			var receivedCustomer = JsonSerializer.Deserialize<BaseCustomerMessageEvent>(message);
+			var receivedCustomer = JsonSerializer.Deserialize<CustomerMessageEvent>(message);
 
 			await _customerRepository.CreateCustomerAsync(receivedCustomer.Email, receivedCustomer.Address, receivedCustomer.PostalCode, receivedCustomer.Residence);
 

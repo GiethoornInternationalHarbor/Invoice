@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace InvoiceService.App.Structs
 {
-	public class BaseCustomerMessageEvent
+	public struct CustomerMessageEvent
 	{
+		public string CustomerId { get; set; }
 		public string Email { get; set; }
 		public string Address { get; set; }
 		public string PostalCode { get; set; }
