@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using InvoiceService.Core.Events;
 using InvoiceService.Core.Messaging;
 using InvoiceService.Core.Models;
 using InvoiceService.Core.Repositories;
@@ -161,9 +162,9 @@ namespace InvoiceService.App.Messaging
 
 		private async Task<bool> HandleShipDocked(string message)
 		{
-			var receivedShip = JsonSerializer.Deserialize<Ship>(message);
+			var receivedShip = JsonSerializer.Deserialize<ShipDockedEvent>(message);
 
-			await _shipRepository.CreateShip(receivedShip);
+			await _shipRepository.CreateShip(receivedShip.CustomerId.IdAsString(), receivedShip.Name);
 
 			return true;
 		}

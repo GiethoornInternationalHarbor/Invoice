@@ -28,8 +28,9 @@ namespace InvoiceService.Infrastructure.Repositories
 
 		private async Task<Invoice> CreateInvoiceLineAsync(string customerId, InvoiceLine invoiceLine)
 		{
+			throw new NotImplementedException();
 			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			var invoice = await GetInvoiceByEmail(customerId);
+			/*var invoice = await GetInvoiceByEmail(customerId);
 
 			invoice.Lines.Add(invoiceLine);
 
@@ -37,24 +38,28 @@ namespace InvoiceService.Infrastructure.Repositories
 
 			await dbContext.SaveChangesAsync();
 
-			return invoice;
+			return invoice;*/
 		}
 
 		public async Task<Invoice> AddShipServiceLineAsync(Customer customer, Ship ship, ShipService shipService)
 		{
-			var invoiceLine = new InvoiceLine()
+			throw new NotImplementedException();
+
+			/*var invoiceLine = new InvoiceLine()
 			{
 				Description = $"Service: {shipService.Name} applied for ship: {ship.Name}",
 				InvoiceType = InvoiceTypes.ShipService,
 				Price = shipService.Price
 			};
 
-			return await CreateInvoiceLineAsync(customer.Email, invoiceLine);
+			return await CreateInvoiceLineAsync(customer.Email, invoiceLine);*/
 		}
 
 		public async Task<Invoice> UpdateInvoiceAsync(Customer customer, Rental rental)
 		{
-			var invoiceLine = new InvoiceLine()
+			throw new NotImplementedException();
+
+			/*var invoiceLine = new InvoiceLine()
 			{
 				InvoiceType = InvoiceTypes.Rental,
 				Price = rental.Price
@@ -64,13 +69,15 @@ namespace InvoiceService.Infrastructure.Repositories
 
 			await _rentalRepository.DeleteRental(rental.Id);
 
-			return invoice;
+			return invoice;*/
 		}
 
 		public async Task<Invoice> GetInvoiceByEmail(string email)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			return await dbContext.Invoices.LastOrDefaultAsync(x => x.Customer.Email == email);
+			throw new NotImplementedException();
+
+			/*InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
+			return await dbContext.Invoices.LastOrDefaultAsync(x => x.Customer.Email == email);*/
 		}
 	}
 }
