@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace InvoiceService.Core.Models
 {
 	public class InvoiceLine
-	{
+	{						 
 		/// <summary>
 		/// Gets or sets the identifier.
 		/// </summary>											
