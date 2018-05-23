@@ -46,7 +46,7 @@ namespace InvoiceService.App
 			services.AddMvc();
 		}
 
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env, IEventStoreConnection conn)
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
 			if (env.IsDevelopment())
 			{
@@ -63,8 +63,7 @@ namespace InvoiceService.App
 			IMessageHandler messageHandler = app.ApplicationServices.GetService<IMessageHandler>();
 			IMessageHandlerCallback messageHandlerCallback = app.ApplicationServices.GetService<IMessageHandlerCallback>();
 
-			//DIHelper.OnServicesSetup(app.ApplicationServices);
-			conn.ConnectAsync().Wait();
+			DIHelper.OnServicesSetup(app.ApplicationServices);
 
 			app.UseMvc();
 

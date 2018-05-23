@@ -2,9 +2,7 @@
 using InvoiceService.Core.Models;
 using InvoiceService.Core.ReadModel;
 using InvoiceService.Core.Repositories;
-using InvoiceService.Infrastructure.Database;
 using InvoiceService.Infrastructure.EventSourcing;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;

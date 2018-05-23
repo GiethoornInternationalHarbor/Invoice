@@ -3,9 +3,7 @@ using System.Threading.Tasks;
 using InvoiceService.Core.EventSourcing.Ids;
 using InvoiceService.Core.Models;
 using InvoiceService.Core.Repositories;
-using InvoiceService.Infrastructure.Database;
 using InvoiceService.Infrastructure.EventSourcing;
-using Microsoft.EntityFrameworkCore;
 
 namespace InvoiceService.Infrastructure.Repositories
 {
