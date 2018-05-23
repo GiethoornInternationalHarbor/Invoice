@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using InvoiceService.App.Structs;
 using InvoiceService.Core.Messaging;
-using InvoiceService.Core.Messaging.Events;
 using InvoiceService.Core.Models;
 using InvoiceService.Core.Repositories;
 using Utf8Json;

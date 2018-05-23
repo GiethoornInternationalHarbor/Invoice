@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace InvoiceService.Core.Messaging.Events
+namespace InvoiceService.App.Structs
 {
 	public struct ShipDockedMessageEvent
 	{

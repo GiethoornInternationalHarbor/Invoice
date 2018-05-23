@@ -26,7 +26,7 @@ namespace InvoiceService.Core.Models
 
 		public override bool Equals(object obj)
 		{
-			return obj is ShipServiceId && Equals(Id, ((ShipServiceId)obj).Id);
+			return obj is ShipId && Equals(Id, ((ShipId)obj).Id);
 		}
 
 		public override int GetHashCode()
