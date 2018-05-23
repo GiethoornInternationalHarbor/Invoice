@@ -59,7 +59,7 @@ namespace InvoiceService.Infrastructure.EventSourcing
 
 		private IDomainEvent<TAggregateId> Deserialize<TAggregateId>(string eventType, byte[] data)
 		{
-			JsonSerializerSettings settings = new JsonSerializerSettings();
+			JsonSerializerSettings settings = new JsonSerializerSettings() { ContractResolver = new PrivateSetterContractResolver() };
 			return (IDomainEvent<TAggregateId>)JsonConvert.DeserializeObject(Encoding.UTF8.GetString(data), Type.GetType(eventType), settings);
 		}
 
