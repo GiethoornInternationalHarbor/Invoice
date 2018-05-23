@@ -172,7 +172,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedShip = Newtonsoft.Json.JsonConvert.DeserializeObject<ShipDockedMessageEvent>(message);
 
-			await _shipRepository.CreateShip(receivedShip.ShipId, receivedShip.CustomerId, receivedShip.Name);
+			await _shipRepository.CreateShip(receivedShip.ShipId, receivedShip.CustomerId, receivedShip.ShipName);
 
 			return true;
 		}

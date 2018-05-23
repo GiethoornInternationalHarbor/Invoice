@@ -8,6 +8,6 @@ namespace InvoiceService.App.Structs
 	{
 		public string CustomerId { get; set; }
 		public string ShipId { get; set; }
-		public string Name { get; set; }
+		public string ShipName { get; set; }
 	}
 }
