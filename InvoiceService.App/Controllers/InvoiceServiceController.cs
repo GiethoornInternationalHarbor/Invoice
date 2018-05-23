@@ -15,6 +15,31 @@ namespace InvoiceService.App.Controllers
 			_invoiceRepository = invoiceRepository;
 		}
 
+		[HttpGet("overview/{id}")]
+		public async Task<IActionResult> GetOverview(string id)
+		{
+			IActionResult response = null;
+
+			try
+			{
+				if (!string.IsNullOrWhiteSpace(id))
+				{
+					var invoice = await _invoiceRepository.GetInvoicesForCustomer(id);
+					response = Ok(invoice);
+				}
+				else
+				{
+					response = NotFound();
+				}
+			}
+			catch (Exception)
+			{
+				response = StatusCode(500);
+			}
+
+			return response;
+		}
+
 		[HttpGet("{id}")]
 		public async Task<IActionResult> Get(string id)
 		{
@@ -24,7 +49,7 @@ namespace InvoiceService.App.Controllers
 			{
 				if (!string.IsNullOrWhiteSpace(id))
 				{
-					var invoice = await _invoiceRepository.GetInvoiceByEmail(id);
+					var invoice = await _invoiceRepository.GetInvoice(id);
 					response = Ok(invoice);
 				}
 				else

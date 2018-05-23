@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
+using InvoiceService.App.Structs;
+using InvoiceService.Core.EventSourcing.Ids;
 using InvoiceService.Core.Messaging;
 using InvoiceService.Core.Models;
 using InvoiceService.Core.Repositories;
@@ -35,7 +37,7 @@ namespace InvoiceService.App.Messaging
 		{
 			switch (messageType)
 			{
-				case MessageTypes.CustomedUpdated:
+				case MessageTypes.CustomerUpdated:
 					{
 						return await HandleCustomerUpdated(message);
 					}
@@ -75,6 +77,12 @@ namespace InvoiceService.App.Messaging
 					{
 						return await HandleShipUndocked(message);
 					}
+				case MessageTypes.CustomerDeleted:
+					{
+						return await HandleCustomerDeleted(message);
+					}
+				case MessageTypes.RentalDeclined:
+					return await HandleRentalDeclined(message);
 			}
 
 			return true;
@@ -82,99 +90,107 @@ namespace InvoiceService.App.Messaging
 
 		private async Task<bool> HandleCustomerUpdated(string message)
 		{
-			var receivedCustomer = JsonSerializer.Deserialize<Customer>(message);
+			var receivedCustomer = JsonSerializer.Deserialize<CustomerMessageEvent>(message);
 
-			await _customerRepository.UpdateCustomerAsync(receivedCustomer);
+			await _customerRepository.UpdateCustomerAsync(receivedCustomer.CustomerId, receivedCustomer.Email, receivedCustomer.Address, receivedCustomer.PostalCode, receivedCustomer.Residence);
 
 			return true;
 		}
 
 		private async Task<bool> HandleCustomerCreated(string message)
 		{
-			var receivedCustomer = JsonSerializer.Deserialize<Customer>(message);
+			var receivedCustomer = JsonSerializer.Deserialize<CustomerMessageEvent>(message);
 
-			await _customerRepository.CreateCustomerAsync(receivedCustomer);
+			await _customerRepository.CreateCustomerAsync(receivedCustomer.CustomerId, receivedCustomer.Email, receivedCustomer.Address, receivedCustomer.PostalCode, receivedCustomer.Residence);
+
+			return true;
+		}
+
+		private async Task<bool> HandleCustomerDeleted(string message)
+		{
+			var receivedCustomer = JsonSerializer.Deserialize<CustomerMessageEvent>(message);
+
+			await _customerRepository.DeleteCustomerAsync(receivedCustomer.CustomerId);
 
 			return true;
 		}
 
 		private async Task<bool> HandleRentalRequested(string message)
 		{
-			var receivedRental = JsonSerializer.Deserialize<Rental>(message);
+			var receivedRental = JsonSerializer.Deserialize<RentalMessageEvent>(message);
 
-			await _rentalRepository.CreateRental(receivedRental);
+			RentalId rentalId = await _rentalRepository.CreateRental(receivedRental.CustomerId, receivedRental.RentalId, receivedRental.Price);
+			await _invoiceRepository.CreateInvoice(receivedRental.CustomerId, rentalId.ToString());
 
 			return true;
 		}
 
 		private async Task<bool> HandleRentalAccepted(string message)
 		{
-			var customerRental = JsonSerializer.Deserialize<CustomerRental>(message);
+			var customerRental = JsonSerializer.Deserialize<RentalMessageEvent>(message);
 
-			var customer = await _customerRepository.GetCustomerAsync(customerRental.CustomerId);
+			await _rentalRepository.Accept(customerRental.RentalId, customerRental.Price);
 
-			var rental = await _rentalRepository.GetRental(customerRental.RentalId);
+			return true;
+		}
 
-			await _invoiceRepository.UpdateInvoiceAsync(customer, rental);
+		private async Task<bool> HandleRentalDeclined(string message)
+		{
+			var customerRental = JsonSerializer.Deserialize<RentalMessageEvent>(message);
+
+			await _rentalRepository.DeleteRental(customerRental.RentalId);
 
 			return true;
 		}
 
 		private async Task<bool> HandleServiceCompleted(string message)
 		{
-			var receivedShipServiceObject = JsonSerializer.Deserialize<ShipServiceObject>(message);
-			var ship = await _shipRepository.GetShip(receivedShipServiceObject.ShipId);
-			var shipService = await _shipServiceRepository.GetShipService(receivedShipServiceObject.ServiceId);
-			var customer = await _customerRepository.GetCustomerAsync(receivedShipServiceObject.CustomerId);
-
-			await _invoiceRepository.AddShipServiceLineAsync(customer, ship, shipService);
+			var receivedShipServiceObject = JsonSerializer.Deserialize<ShipServiceCompletedMessageEvent>(message);
+			var invoice = await _invoiceRepository.GetLastInvoiceForCustomer(receivedShipServiceObject.CustomerId);
+			await _invoiceRepository.AddShipServiceLineAsync(invoice.Id.ToString(), receivedShipServiceObject.ShipId, receivedShipServiceObject.ServiceId);
 
 			return true;
 		}
 
 		private async Task<bool> HandleServiceCreated(string message)
 		{
-			var receivedShipService = JsonSerializer.Deserialize<ShipService>(message);
+			var receivedShipService = JsonSerializer.Deserialize<ShipServiceCudMessageEvent>(message);
 
-			await _shipServiceRepository.CreateShipService(receivedShipService);
+			await _shipServiceRepository.CreateShipService(receivedShipService.Id, receivedShipService.Name, receivedShipService.Price);
 
 			return true;
 		}
 
 		private async Task<bool> HandleServiceDeleted(string message)
 		{
-			var shipServiceId = Guid.Parse(message);
+			var shipService = JsonSerializer.Deserialize<ShipServiceCudMessageEvent>(message);
 
-			await _shipServiceRepository.DeleteShipService(shipServiceId);
+			await _shipServiceRepository.DeleteShipService(shipService.Id);
 
 			return true;
 		}
 
 		private async Task<bool> HandleServiceUpdated(string message)
 		{
-			var receivedShipService = JsonSerializer.Deserialize<ShipService>(message);
+			var receivedShipService = JsonSerializer.Deserialize<ShipServiceCudMessageEvent>(message);
 
-			await _shipServiceRepository.UpdateShipService(receivedShipService);
+			await _shipServiceRepository.UpdateShipService(receivedShipService.Id, receivedShipService.Name, receivedShipService.Price);
 
 			return true;
 		}
 
 		private async Task<bool> HandleShipDocked(string message)
 		{
-			var receivedShip = JsonSerializer.Deserialize<Ship>(message);
+			var receivedShip = Newtonsoft.Json.JsonConvert.DeserializeObject<ShipDockedMessageEvent>(message);
 
-			await _shipRepository.CreateShip(receivedShip);
+			await _shipRepository.CreateShip(receivedShip.ShipId, receivedShip.CustomerId, receivedShip.ShipName);
 
 			return true;
 		}
 
 		private async Task<bool> HandleShipUndocked(string message)
 		{
-			var receivedShip = JsonSerializer.Deserialize<CustomerShip>(message);
-
-			var invoice = await _invoiceRepository.GetInvoiceByEmail(receivedShip.CustomerId);
-
-			await _messagePublisher.PublishMessageAsync(MessageTypes.InvoiceCreated, invoice);
+			var receivedShip = JsonSerializer.Deserialize<ShipUndockedMessageEvent>(message);
 
 			await _shipRepository.DeleteShip(receivedShip.ShipId);
 

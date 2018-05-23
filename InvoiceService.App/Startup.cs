@@ -11,6 +11,7 @@ using InvoiceService.Infrastructure.DI;
 using InvoiceService.App.Messaging;
 using System.Threading.Tasks;
 using System.Threading;
+using EventStore.ClientAPI;
 
 namespace InvoiceService.App
 {

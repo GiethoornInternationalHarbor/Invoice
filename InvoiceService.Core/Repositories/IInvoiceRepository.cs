@@ -1,4 +1,5 @@
 ﻿using InvoiceService.Core.Models;
+using InvoiceService.Core.ReadModel;
 using System.Threading.Tasks;
 
 namespace InvoiceService.Core.Repositories
@@ -6,27 +7,41 @@ namespace InvoiceService.Core.Repositories
 	public interface IInvoiceRepository
 	{
 		/// <summary>
+		/// Gets the invoices for customer.
+		/// </summary>
+		/// <param name="customerId">The customer identifier.</param>
+		/// <returns></returns>
+		Task<InvoiceOverviewReadModel> GetInvoicesForCustomer(string customerId);
+
+		/// <summary>
 		/// Gets the invoice.
 		/// </summary>
-		/// <param name="email">The email.</param>
+		/// <param name="invoiceId">The invoice identifier.</param>
 		/// <returns></returns>
-		Task<Invoice> GetInvoiceByEmail(string email);
+		Task<InvoiceReadModel> GetInvoice(string invoiceId);
+
+		/// <summary>
+		/// Creates the invoice.
+		/// </summary>
+		/// <param name="customerId">The customer identifier.</param>
+		/// <param name="rentalId">The rental identifier.</param>
+		/// <returns></returns>
+		Task CreateInvoice(string customerId, string rentalId);
+
+		/// <summary>
+		/// Gets the last invoice for customer.
+		/// </summary>
+		/// <param name="customerId">The customer identifier.</param>
+		/// <returns></returns>
+		Task<Invoice> GetLastInvoiceForCustomer(string customerId);
 
 		/// <summary>
 		/// Adds the ship service line asynchronous.
 		/// </summary>
-		/// <param name="customer">The customer.</param>
-		/// <param name="ship">The ship.</param>
-		/// <param name="shipService">The ship service.</param>
+		/// <param name="invoiceId">The invoice identifier.</param>
+		/// <param name="shipId">The ship identifier.</param>
+		/// <param name="serviceId">The service identifier.</param>
 		/// <returns></returns>
-		Task<Invoice> AddShipServiceLineAsync(Customer customer, Ship ship, ShipService shipService);
-
-		/// <summary>
-		/// Updates the invoice asynchronous.
-		/// </summary>
-		/// <param name="customer">The customer.</param>
-		/// <param name="rental">The rental.</param>
-		/// <returns></returns>
-		Task<Invoice> UpdateInvoiceAsync(Customer customer, Rental rental);
+		Task AddShipServiceLineAsync(string invoiceId, string shipId, string serviceId);
 	}
 }

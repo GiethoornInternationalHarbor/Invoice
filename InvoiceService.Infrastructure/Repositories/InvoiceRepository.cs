@@ -1,76 +1,128 @@
-﻿using InvoiceService.Core.Models;
+﻿using InvoiceService.Core.EventSourcing.Ids;
+using InvoiceService.Core.Models;
+using InvoiceService.Core.ReadModel;
 using InvoiceService.Core.Repositories;
-using InvoiceService.Infrastructure.Database;
-using Microsoft.EntityFrameworkCore;
+using InvoiceService.Infrastructure.EventSourcing;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace InvoiceService.Infrastructure.Repositories
 {
 	public class InvoiceRepository : IInvoiceRepository
 	{
+		private readonly IEventSourcingRepository<Invoice, InvoiceId> _eventRepository;
+		private readonly ICustomerRepository _customerRepository;
+		private readonly IShipServiceRepository _shipServiceRepository;
+		private readonly IShipRepository _shipRepository;
 		private readonly IRentalRepository _rentalRepository;
-		private readonly InvoiceDbContextFactory _invoiceDbFactory;
 
-		public InvoiceRepository(InvoiceDbContextFactory invoiceDbContextFactory, IRentalRepository rentalRepository)
+		public InvoiceRepository(IEventSourcingRepository<Invoice, InvoiceId> eventRepo, ICustomerRepository customerRepository, IShipServiceRepository shipServiceRepository, IShipRepository shipRepository, IRentalRepository rentalRepository)
 		{
-			_invoiceDbFactory = invoiceDbContextFactory;
+			_eventRepository = eventRepo;
+			_customerRepository = customerRepository;
+			_shipServiceRepository = shipServiceRepository;
+			_shipRepository = shipRepository;
 			_rentalRepository = rentalRepository;
 		}
 
-		private async Task<Invoice> CreateInvoiceAsync(Invoice invoice)
+		public async Task CreateInvoice(string customerId, string rentalId)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			var invoiceToAdd = (await dbContext.Invoices.AddAsync(invoice)).Entity;
-			await dbContext.SaveChangesAsync();
-			return invoiceToAdd;
+			Invoice invoice = new Invoice(new InvoiceId(), new CustomerId(customerId));
+			invoice.SetRental(new RentalId(rentalId));
+
+			await _eventRepository.SaveAsync(invoice);
+			await _customerRepository.AddInvoice(customerId, invoice.Id.ToString());
 		}
 
-		private async Task<Invoice> CreateInvoiceLineAsync(string customerId, InvoiceLine invoiceLine)
+		public async Task<Invoice> GetLastInvoiceForCustomer(string customerId)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			var invoice = await GetInvoiceByEmail(customerId);
+			Customer customer = await _customerRepository.GetCustomerAsync(customerId);
 
-			invoice.Lines.Add(invoiceLine);
-
-			dbContext.Invoices.Update(invoice);
-
-			await dbContext.SaveChangesAsync();
-
+			Invoice invoice = await _eventRepository.GetByIdAsync(customer.Invoices.Last());
 			return invoice;
 		}
 
-		public async Task<Invoice> AddShipServiceLineAsync(Customer customer, Ship ship, ShipService shipService)
+		public async Task<InvoiceOverviewReadModel> GetInvoicesForCustomer(string customerId)
 		{
-			var invoiceLine = new InvoiceLine()
+			Customer customer = await _customerRepository.GetCustomerAsync(customerId);
+
+			InvoiceOverviewReadModel overview = new InvoiceOverviewReadModel
 			{
-				Description = $"Service: {shipService.Name} applied for ship: {ship.Name}",
-				InvoiceType = InvoiceTypes.ShipService,
-				Price = shipService.Price
+				CustomerId = customerId,
+				Invoices = customer.Invoices.Select(x => x.IdAsString())
 			};
 
-			return await CreateInvoiceLineAsync(customer.Email, invoiceLine);
+			return overview;
 		}
 
-		public async Task<Invoice> UpdateInvoiceAsync(Customer customer, Rental rental)
+		public async Task<InvoiceReadModel> GetInvoice(string invoiceId)
 		{
-			var invoiceLine = new InvoiceLine()
+			Invoice invoice = await _eventRepository.GetByIdAsync(new InvoiceId(invoiceId));
+
+			var taskInvoiceLines = Task.WhenAll(invoice.Lines.Select(async x =>
+		   {
+			   var getShipTask = _shipRepository.GetShip(x.ShipId.ToString());
+			   var getServiceTask = _shipServiceRepository.GetShipService(x.ServiceId.ToString());
+			   await Task.WhenAll(getShipTask, getServiceTask);
+
+			   Ship ship = getShipTask.Result;
+			   ShipService service = getServiceTask.Result;
+
+			   return new InvoiceLineReadModel
+			   {
+				   Description = $"Service: {service.Name} applied for ship: {ship.Name}",
+				   Price = service.Price
+			   };
+		   }));
+
+
+			var taskCustomer = Task.Run(async () =>
 			{
-				InvoiceType = InvoiceTypes.Rental,
-				Price = rental.Price
+				Customer foundCustomer = await _customerRepository.GetCustomerAsync(invoice.CustomerId.ToString());
+				CustomerReadModel readModel = new CustomerReadModel
+				{
+					Address = foundCustomer.Address,
+					Email = foundCustomer.Email,
+					PostalCode = foundCustomer.PostalCode,
+					Residence = foundCustomer.Residence
+				};
+
+				return readModel;
+			});
+
+			var taskRental = Task.Run(async () =>
+			{
+				Rental foundRental = await _rentalRepository.GetRental(invoice.RentalId.ToString());
+				RentalReadModel readModel = new RentalReadModel
+				{
+					Price = foundRental.Price
+				};
+
+				return readModel;
+			});
+
+			await Task.WhenAll(taskInvoiceLines, taskCustomer, taskRental);
+
+			var customer = await taskCustomer;
+			var lines = await taskInvoiceLines;
+			var rental = await taskRental;
+
+			return new InvoiceReadModel
+			{
+				Customer = customer,
+				Lines = lines,
+				Rental = rental,
+				TotalPrice = rental.Price + lines.Sum(x => x.Price)
 			};
-
-			var invoice = await CreateInvoiceLineAsync(customer.Email, invoiceLine);
-
-			await _rentalRepository.DeleteRental(rental.Id);
-
-			return invoice;
 		}
 
-		public async Task<Invoice> GetInvoiceByEmail(string email)
+		public async Task AddShipServiceLineAsync(string invoiceId, string shipId, string serviceId)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			return await dbContext.Invoices.LastOrDefaultAsync(x => x.Customer.Email == email);
+			Invoice invoice = await _eventRepository.GetByIdAsync(new InvoiceId(invoiceId));
+			invoice.AddShipService(new ShipServiceId(serviceId), new ShipId(shipId));
+			await _eventRepository.SaveAsync(invoice);
+
 		}
 	}
 }

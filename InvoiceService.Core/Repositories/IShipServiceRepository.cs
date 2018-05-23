@@ -9,29 +9,33 @@ namespace InvoiceService.Core.Repositories
 		/// <summary>
 		/// Creates the ship service.
 		/// </summary>
-		/// <param name="shipService">The ship service.</param>
+		/// <param name="serviceId">The service identifier.</param>
+		/// <param name="name">The name.</param>
+		/// <param name="price">The price.</param>
 		/// <returns></returns>
-		Task<ShipService> CreateShipService(ShipService shipService);
+		Task CreateShipService(string serviceId, string name, double price);
 
 		/// <summary>
 		/// Gets the ship service.
 		/// </summary>
 		/// <param name="id">The identifier.</param>
 		/// <returns></returns>
-		Task<ShipService> GetShipService(Guid id);
+		Task<ShipService> GetShipService(string id);
 
 		/// <summary>
 		/// Updates the ship service.
 		/// </summary>
-		/// <param name="shipService">The ship service.</param>
+		/// <param name="serviceId">The service identifier.</param>
+		/// <param name="name">The name.</param>
+		/// <param name="price">The price.</param>
 		/// <returns></returns>
-		Task<ShipService> UpdateShipService(ShipService shipService);
+		Task UpdateShipService(string serviceId, string name, double price);
 
 		/// <summary>
 		/// Deletes the ship service.
 		/// </summary>
 		/// <param name="id">The identifier.</param>
 		/// <returns></returns>
-		Task DeleteShipService(Guid id);
+		Task DeleteShipService(string id);
 	}
 }

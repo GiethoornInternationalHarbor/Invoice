@@ -1,43 +1,37 @@
 ﻿using System;
 using System.Threading.Tasks;
+using InvoiceService.Core.EventSourcing.Ids;
 using InvoiceService.Core.Models;
 using InvoiceService.Core.Repositories;
-using InvoiceService.Infrastructure.Database;
-using Microsoft.EntityFrameworkCore;
+using InvoiceService.Infrastructure.EventSourcing;
 
 namespace InvoiceService.Infrastructure.Repositories
 {
 	public class ShipRepository : IShipRepository
 	{
-		private readonly IInvoiceRepository _invoiceRepository;
-		private readonly InvoiceDbContextFactory _invoiceDbFactory;
+		private readonly IEventSourcingRepository<Ship, ShipId> _eventRepository;
 
-		public ShipRepository(IInvoiceRepository invoiceRepository, InvoiceDbContextFactory invoiceDbContextFactory)
+		public ShipRepository(IEventSourcingRepository<Ship, ShipId> repo)
 		{
-			_invoiceDbFactory = invoiceDbContextFactory;
-			_invoiceRepository = invoiceRepository;
+			_eventRepository = repo;
 		}
 
-		public async Task<Ship> CreateShip(Ship ship)
+		public async Task CreateShip(string shipId, string customerId, string shipName)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			var shipToAdd = (await dbContext.Ships.AddAsync(ship)).Entity;
-			await dbContext.SaveChangesAsync();
-			return shipToAdd;
+			Ship ship = new Ship(new ShipId(shipId), new CustomerId(customerId), shipName);
+			await _eventRepository.SaveAsync(ship);
 		}
 
-		public async Task DeleteShip(Guid id)
+		public async Task DeleteShip(string id)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			var shipToDelete = new Ship() { Id = id };
-			dbContext.Entry(shipToDelete).State = EntityState.Deleted;
-			await dbContext.SaveChangesAsync();
+			var ship = await _eventRepository.GetByIdAsync(new ShipId(id));
+			ship.Undocked();
+			await _eventRepository.SaveAsync(ship);
 		}
 
-		public Task<Ship> GetShip(Guid id)
+		public async Task<Ship> GetShip(string id)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			return dbContext.Ships.LastOrDefaultAsync(x => x.Id == id);
+			return await _eventRepository.GetByIdAsync(new ShipId(id));
 		}
 	}
 }

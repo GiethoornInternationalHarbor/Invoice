@@ -1,40 +1,53 @@
-﻿using InvoiceService.Core.Models;
+﻿using InvoiceService.Core.EventSourcing.Ids;
+using InvoiceService.Core.Models;
 using InvoiceService.Core.Repositories;
-using InvoiceService.Infrastructure.Database;
-using Microsoft.EntityFrameworkCore;
+using InvoiceService.Infrastructure.EventSourcing;
+using System;
 using System.Threading.Tasks;
 
 namespace InvoiceService.Infrastructure.Repositories
 {
 	public class CustomerRepository : ICustomerRepository
 	{
-		private readonly InvoiceDbContextFactory _invoiceDbFactory;
+		private readonly IEventSourcingRepository<Customer, CustomerId> _eventRepository;
 
-		public CustomerRepository(InvoiceDbContextFactory invoiceDbContextFactory)
+		public CustomerRepository(IEventSourcingRepository<Customer, CustomerId> eventRepository)
 		{
-			_invoiceDbFactory = invoiceDbContextFactory;
+			_eventRepository = eventRepository;
 		}
 
-		public async Task<Customer> CreateCustomerAsync(Customer customer)
+		public async Task CreateCustomerAsync(string customerId, string email, string address, string postalCode, string residence)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			var customerToAdd = (await dbContext.Customers.AddAsync(customer)).Entity;
-			await dbContext.SaveChangesAsync();
-			return customerToAdd;
+			Customer customer = new Customer(new CustomerId(customerId), email, address, postalCode, residence);
+			await _eventRepository.SaveAsync(customer);
 		}
 
-		public Task<Customer> GetCustomerAsync(string email)
+		public Task<Customer> GetCustomerAsync(string customerId)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			return dbContext.Customers.LastOrDefaultAsync(x => x.Email == email);
+			return _eventRepository.GetByIdAsync(new CustomerId(customerId));
 		}
 
-		public async Task<Customer> UpdateCustomerAsync(Customer customer)
+		public async Task UpdateCustomerAsync(string customerId, string email, string address, string postalCode, string residence)
 		{
-			InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			var updatedCustomer = dbContext.Customers.Update(customer);
-			await dbContext.SaveChangesAsync();
-			return updatedCustomer.Entity;
+			var customer = await _eventRepository.GetByIdAsync(new CustomerId(customerId));
+			customer.UpdateCustomer(email, address, postalCode, residence);
+			await _eventRepository.SaveAsync(customer);
+		}
+
+		public async Task DeleteCustomerAsync(string customerId)
+		{
+			var customer = await _eventRepository.GetByIdAsync(new CustomerId(customerId));
+			customer.Delete();
+			await _eventRepository.SaveAsync(customer);
+		}
+
+		public async Task AddInvoice(string customerId, string invoiceId)
+		{
+			Customer customer = await _eventRepository.GetByIdAsync(new CustomerId(customerId));
+			customer.AddInvoice(invoiceId);
+
+			await _eventRepository.SaveAsync(customer);
 		}
 	}
+
 }
