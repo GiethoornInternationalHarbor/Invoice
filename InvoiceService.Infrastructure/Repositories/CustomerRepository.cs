@@ -19,7 +19,7 @@ namespace InvoiceService.Infrastructure.Repositories
 
 		public async Task CreateCustomerAsync(string email, string address, string postalCode, string residence)
 		{
-			Customer customer = new Customer(CustomerId.NewCustomerId(), email, address, postalCode, residence);
+			Customer customer = new Customer(new CustomerId(), email, address, postalCode, residence);
 			await _eventRepository.SaveAsync(customer);
 		}
 

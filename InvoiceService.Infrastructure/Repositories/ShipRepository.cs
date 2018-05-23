@@ -19,7 +19,7 @@ namespace InvoiceService.Infrastructure.Repositories
 
 		public async Task CreateShip(string customerId, string shipName)
 		{
-			Ship ship = new Ship(ShipId.NewShipServiceId(), new CustomerId(customerId), shipName);
+			Ship ship = new Ship(new ShipId(), new CustomerId(customerId), shipName);
 			await _eventRepository.SaveAsync(ship);
 		}
 

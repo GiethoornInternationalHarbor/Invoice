@@ -3,45 +3,18 @@ using System;
 
 namespace InvoiceService.Core.Models
 {
-	public class ShipId : IAggregateId
+	public class ShipId : AggregateIdBase
 	{
-		private const string IdAsStringPrefix = "Ship-";
+		protected override string IdAsStringPrefix => "Ship-";
 
-		public Guid Id { get; private set; }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ShipId"/> class.
+		/// Initialized with Guid.NewGuid()
+		/// </summary>
+		public ShipId() : base() { }
 
-		private ShipId(Guid id)
+		public ShipId(string id) : base(id)
 		{
-			Id = id;
-		}
-
-		public ShipId(string id)
-		{
-			Id = Guid.Parse(id.StartsWith(IdAsStringPrefix) ? id.Substring(IdAsStringPrefix.Length) : id);
-		}
-
-		public override string ToString()
-		{
-			return IdAsString();
-		}
-
-		public override bool Equals(object obj)
-		{
-			return obj is ShipId && Equals(Id, ((ShipId)obj).Id);
-		}
-
-		public override int GetHashCode()
-		{
-			return Id.GetHashCode();
-		}
-
-		public static ShipId NewShipServiceId()
-		{
-			return new ShipId(Guid.NewGuid());
-		}
-
-		public string IdAsString()
-		{
-			return $"{IdAsStringPrefix}{Id.ToString()}";
 		}
 	}
 }

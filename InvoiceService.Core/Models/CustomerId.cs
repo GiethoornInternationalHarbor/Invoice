@@ -3,45 +3,18 @@ using System;
 
 namespace InvoiceService.Core.Models
 {
-	public class CustomerId : IAggregateId
+	public class CustomerId : AggregateIdBase
 	{
-		private const string IdAsStringPrefix = "Customer-";
+		protected override string IdAsStringPrefix => "Customer-";
 
-		public Guid Id { get; private set; }
+		/// <summary>
+		/// Initializes a new instance of the <see cref="CustomerId"/> class.
+		/// Initialized with Guid.NewGuid()
+		/// </summary>
+		public CustomerId() : base() { }
 
-		private CustomerId(Guid id)
+		public CustomerId(string id) : base(id)
 		{
-			Id = id;
-		}
-
-		public CustomerId(string id)
-		{
-			Id = Guid.Parse(id.StartsWith(IdAsStringPrefix) ? id.Substring(IdAsStringPrefix.Length) : id);
-		}
-
-		public override string ToString()
-		{
-			return IdAsString();
-		}
-
-		public override bool Equals(object obj)
-		{
-			return obj is CustomerId && Equals(Id, ((CustomerId)obj).Id);
-		}
-
-		public override int GetHashCode()
-		{
-			return Id.GetHashCode();
-		}
-
-		public static CustomerId NewCustomerId()
-		{
-			return new CustomerId(Guid.NewGuid());
-		}
-
-		public string IdAsString()
-		{
-			return $"{IdAsStringPrefix}{Id.ToString()}";
 		}
 	}
 }

@@ -14,6 +14,8 @@ namespace InvoiceService.Core.Models
 
 		private string Residence { get; set; }
 
+		private Customer() { }
+
 		public Customer(CustomerId customerId, string email, string address, string postalCode, string residence)
 		{
 			if (customerId == null) throw new ArgumentNullException(nameof(customerId));
