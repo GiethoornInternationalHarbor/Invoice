@@ -1,6 +1,7 @@
 ﻿using InvoiceService.Core.Models;
 using InvoiceService.Core.Repositories;
 using InvoiceService.Infrastructure.Database;
+using InvoiceService.Infrastructure.EventSourcing;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
@@ -9,48 +10,36 @@ namespace InvoiceService.Infrastructure.Repositories
 {
 	public class ShipServiceRepository : IShipServiceRepository
 	{
-		private readonly InvoiceDbContextFactory _invoiceDbFactory;
+		private readonly IEventSourcingRepository<ShipService, ShipServiceId> _eventRepository;
 
-		public ShipServiceRepository(InvoiceDbContextFactory invoiceDbContextFactory)
+		public ShipServiceRepository(IEventSourcingRepository<ShipService, ShipServiceId> eventRepository)
 		{
-			_invoiceDbFactory = invoiceDbContextFactory;
+			_eventRepository = eventRepository;
 		}
 
-		public async Task<ShipService> CreateShipService(ShipService shipService)
+		public async Task CreateShipService(string serviceId, string name, double price)
 		{
-			throw new NotImplementedException();
-
-			/*InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			var shipServiceToAdd = (await dbContext.ShipServices.AddAsync(shipService)).Entity;
-			await dbContext.SaveChangesAsync();
-			return shipServiceToAdd;*/
+			ShipService shipService = new ShipService(new ShipServiceId(serviceId), name, price);
+			await _eventRepository.SaveAsync(shipService);
 		}
 
-		public async Task DeleteShipService(Guid id)
+		public async Task DeleteShipService(string id)
 		{
-			throw new NotImplementedException();
-			/*InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			var shipServiceToDelete = new Ship() { Id = id };
-			dbContext.Entry(shipServiceToDelete).State = EntityState.Deleted;
-			await dbContext.SaveChangesAsync();*/
+			ShipService service = await _eventRepository.GetByIdAsync(new ShipServiceId(id));
+			service.Delete();
+			await _eventRepository.SaveAsync(service);
 		}
 
-		public Task<ShipService> GetShipService(Guid id)
+		public Task<ShipService> GetShipService(string id)
 		{
-			throw new NotImplementedException();
-
-			/*InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			return dbContext.ShipServices.LastOrDefaultAsync(x => x.Id == id);*/
+			return _eventRepository.GetByIdAsync(new ShipServiceId(id));
 		}
 
-		public async Task<ShipService> UpdateShipService(ShipService shipService)
+		public async Task UpdateShipService(string serviceId, string name, double price)
 		{
-			throw new NotImplementedException();
-
-			/*InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			var updatedShipService = dbContext.ShipServices.Update(shipService);
-			await dbContext.SaveChangesAsync();
-			return updatedShipService.Entity;*/
+			var service = await _eventRepository.GetByIdAsync(new ShipServiceId(serviceId));
+			service.Update(name, price);
+			await _eventRepository.SaveAsync(service);
 		}
 	}
 }

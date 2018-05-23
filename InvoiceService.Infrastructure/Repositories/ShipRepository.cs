@@ -32,9 +32,7 @@ namespace InvoiceService.Infrastructure.Repositories
 
 		public Task<Ship> GetShip(string id)
 		{
-			/*InvoiceDbContext dbContext = _invoiceDbFactory.CreateDbContext();
-			return dbContext.Ships.LastOrDefaultAsync(x => x.Id == id);*/
-			throw new NotImplementedException();
+			return _eventRepository.GetByIdAsync(new ShipId(id));
 		}
 	}
 }

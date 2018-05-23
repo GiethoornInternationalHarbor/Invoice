@@ -148,27 +148,27 @@ namespace InvoiceService.App.Messaging
 
 		private async Task<bool> HandleServiceCreated(string message)
 		{
-			var receivedShipService = JsonSerializer.Deserialize<ShipService>(message);
+			var receivedShipService = JsonSerializer.Deserialize<ShipServiceCudMessageEvent>(message);
 
-			await _shipServiceRepository.CreateShipService(receivedShipService);
+			await _shipServiceRepository.CreateShipService(receivedShipService.ServiceId, receivedShipService.Name, receivedShipService.Price);
 
 			return true;
 		}
 
 		private async Task<bool> HandleServiceDeleted(string message)
 		{
-			var shipServiceId = Guid.Parse(message);
+			var shipService = JsonSerializer.Deserialize<ShipServiceCudMessageEvent>(message);
 
-			await _shipServiceRepository.DeleteShipService(shipServiceId);
+			await _shipServiceRepository.DeleteShipService(shipService.ServiceId);
 
 			return true;
 		}
 
 		private async Task<bool> HandleServiceUpdated(string message)
 		{
-			var receivedShipService = JsonSerializer.Deserialize<ShipService>(message);
+			var receivedShipService = JsonSerializer.Deserialize<ShipServiceCudMessageEvent>(message);
 
-			await _shipServiceRepository.UpdateShipService(receivedShipService);
+			await _shipServiceRepository.UpdateShipService(receivedShipService.ServiceId, receivedShipService.Name, receivedShipService.Price);
 
 			return true;
 		}
