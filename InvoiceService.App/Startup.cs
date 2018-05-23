@@ -11,6 +11,7 @@ using InvoiceService.Infrastructure.DI;
 using InvoiceService.App.Messaging;
 using System.Threading.Tasks;
 using System.Threading;
+using EventStore.ClientAPI;
 
 namespace InvoiceService.App
 {
@@ -45,7 +46,7 @@ namespace InvoiceService.App
 			services.AddMvc();
 		}
 
-		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+		public void Configure(IApplicationBuilder app, IHostingEnvironment env, IEventStoreConnection conn)
 		{
 			if (env.IsDevelopment())
 			{
@@ -63,6 +64,7 @@ namespace InvoiceService.App
 			IMessageHandlerCallback messageHandlerCallback = app.ApplicationServices.GetService<IMessageHandlerCallback>();
 
 			//DIHelper.OnServicesSetup(app.ApplicationServices);
+			conn.ConnectAsync().Wait();
 
 			app.UseMvc();
 

@@ -5,13 +5,18 @@ namespace InvoiceService.Core.Events
 {
 	public class CustomerCreatedEvent : DomainEventBase<CustomerId>
 	{
-		public string Email { get; private set; }
+		public string Email { get; set; }
 
-		public string Address { get; private set; }
+		public string Address { get; set; }
 
-		public string PostalCode { get; private set; }
+		public string PostalCode { get; set; }
 
-		public string Residence { get; private set; }
+		public string Residence { get; set; }
+
+		public CustomerCreatedEvent()
+		{
+
+		}
 
 		internal CustomerCreatedEvent(CustomerId aggregateId, string email, string address, string postalCode, string residence) : base(aggregateId)
 		{
