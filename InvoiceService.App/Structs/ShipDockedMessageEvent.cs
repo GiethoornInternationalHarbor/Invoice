@@ -7,6 +7,7 @@ namespace InvoiceService.App.Structs
 	public struct ShipDockedMessageEvent
 	{
 		public string CustomerId { get; set; }
+		public string ShipId { get; set; }
 		public string Name { get; set; }
 	}
 }

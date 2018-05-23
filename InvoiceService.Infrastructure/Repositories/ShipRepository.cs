@@ -16,9 +16,9 @@ namespace InvoiceService.Infrastructure.Repositories
 			_eventRepository = repo;
 		}
 
-		public async Task CreateShip(string customerId, string shipName)
+		public async Task CreateShip(string shipId, string customerId, string shipName)
 		{
-			Ship ship = new Ship(new ShipId(), new CustomerId(customerId), shipName);
+			Ship ship = new Ship(new ShipId(shipId), new CustomerId(customerId), shipName);
 			await _eventRepository.SaveAsync(ship);
 		}
 

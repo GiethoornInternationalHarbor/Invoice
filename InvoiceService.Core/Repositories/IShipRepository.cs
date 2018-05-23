@@ -9,10 +9,11 @@ namespace InvoiceService.Core.Repositories
 		/// <summary>
 		/// Creates the ship.
 		/// </summary>
+		/// <param name="shipId">The ship identifier.</param>
 		/// <param name="customerId">The customer identifier.</param>
 		/// <param name="shipName">Name of the ship.</param>
 		/// <returns></returns>
-		Task CreateShip(string customerId, string shipName);
+		Task CreateShip(string shipId, string customerId, string shipName);
 
 		/// <summary>
 		/// Gets the ship.
