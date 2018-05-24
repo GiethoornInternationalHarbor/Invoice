@@ -15,7 +15,7 @@ namespace InvoiceService.App.Structs
 		/// <summary>
 		/// Gets or sets the rental identifier.
 		/// </summary>
-		public string RentalId { get; set; }
+		public string Id { get; set; }
 
 		/// <summary>
 		/// Gets or sets the price.
