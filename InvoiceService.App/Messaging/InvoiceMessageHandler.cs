@@ -92,7 +92,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedCustomer = JsonSerializer.Deserialize<CustomerMessageEvent>(message);
 
-			await _customerRepository.UpdateCustomerAsync(receivedCustomer.CustomerId, receivedCustomer.Email, receivedCustomer.Address, receivedCustomer.PostalCode, receivedCustomer.Residence);
+			await _customerRepository.UpdateCustomerAsync(receivedCustomer.Id, receivedCustomer.Email, receivedCustomer.Address, receivedCustomer.PostalCode, receivedCustomer.Residence);
 
 			return true;
 		}
@@ -101,7 +101,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedCustomer = JsonSerializer.Deserialize<CustomerMessageEvent>(message);
 
-			await _customerRepository.CreateCustomerAsync(receivedCustomer.CustomerId, receivedCustomer.Email, receivedCustomer.Address, receivedCustomer.PostalCode, receivedCustomer.Residence);
+			await _customerRepository.CreateCustomerAsync(receivedCustomer.Id, receivedCustomer.Email, receivedCustomer.Address, receivedCustomer.PostalCode, receivedCustomer.Residence);
 
 			return true;
 		}
@@ -110,7 +110,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedCustomer = JsonSerializer.Deserialize<CustomerMessageEvent>(message);
 
-			await _customerRepository.DeleteCustomerAsync(receivedCustomer.CustomerId);
+			await _customerRepository.DeleteCustomerAsync(receivedCustomer.Id);
 
 			return true;
 		}
@@ -119,7 +119,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedRental = JsonSerializer.Deserialize<RentalMessageEvent>(message);
 
-			RentalId rentalId = await _rentalRepository.CreateRental(receivedRental.CustomerId, receivedRental.RentalId, receivedRental.Price);
+			RentalId rentalId = await _rentalRepository.CreateRental(receivedRental.CustomerId, receivedRental.Id, receivedRental.Price);
 			await _invoiceRepository.CreateInvoice(receivedRental.CustomerId, rentalId.ToString());
 
 			return true;
@@ -129,7 +129,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var customerRental = JsonSerializer.Deserialize<RentalMessageEvent>(message);
 
-			await _rentalRepository.Accept(customerRental.RentalId, customerRental.Price);
+			await _rentalRepository.Accept(customerRental.Id, customerRental.Price);
 
 			return true;
 		}
@@ -138,7 +138,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var customerRental = JsonSerializer.Deserialize<RentalMessageEvent>(message);
 
-			await _rentalRepository.DeleteRental(customerRental.RentalId);
+			await _rentalRepository.DeleteRental(customerRental.Id);
 
 			return true;
 		}
