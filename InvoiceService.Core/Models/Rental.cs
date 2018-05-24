@@ -46,5 +46,10 @@ namespace InvoiceService.Core.Models
 		{
 			Price = ev.NewPrice;
 		}
+
+		internal void Apply(RentalDeclinedEvent ev)
+		{
+			IsDeclined = true;
+		}
 	}
 }
