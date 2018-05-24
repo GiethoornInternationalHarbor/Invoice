@@ -87,7 +87,7 @@ namespace InvoiceService.Infrastructure.Messaging
 			}
 			catch (Exception ex)
 			{
-				await Console.Error.WriteLineAsync($"Error during handling message, {ex.Message}");
+				await Console.Error.WriteLineAsync($"Error during handling message, {ex.ToString()}");
 				// Might fail to handle
 				return false;
 			}
