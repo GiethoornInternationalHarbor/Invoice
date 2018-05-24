@@ -92,7 +92,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedCustomer = JsonSerializer.Deserialize<CustomerMessageEvent>(message);
 
-			await _customerRepository.UpdateCustomerAsync(receivedCustomer.CustomerId, receivedCustomer.Email, receivedCustomer.Address, receivedCustomer.PostalCode, receivedCustomer.Residence);
+			await _customerRepository.UpdateCustomerAsync(receivedCustomer.Id, receivedCustomer.Email, receivedCustomer.Address, receivedCustomer.PostalCode, receivedCustomer.Residence);
 
 			return true;
 		}
@@ -101,7 +101,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedCustomer = JsonSerializer.Deserialize<CustomerMessageEvent>(message);
 
-			await _customerRepository.CreateCustomerAsync(receivedCustomer.CustomerId, receivedCustomer.Email, receivedCustomer.Address, receivedCustomer.PostalCode, receivedCustomer.Residence);
+			await _customerRepository.CreateCustomerAsync(receivedCustomer.Id, receivedCustomer.Email, receivedCustomer.Address, receivedCustomer.PostalCode, receivedCustomer.Residence);
 
 			return true;
 		}
@@ -110,7 +110,7 @@ namespace InvoiceService.App.Messaging
 		{
 			var receivedCustomer = JsonSerializer.Deserialize<CustomerMessageEvent>(message);
 
-			await _customerRepository.DeleteCustomerAsync(receivedCustomer.CustomerId);
+			await _customerRepository.DeleteCustomerAsync(receivedCustomer.Id);
 
 			return true;
 		}
